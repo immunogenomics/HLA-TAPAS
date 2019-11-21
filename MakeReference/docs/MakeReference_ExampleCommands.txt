@@ -1,0 +1,19 @@
+
+[Example 1] Implementing previous version.
+
+python3 MakeReference.py --previous-version -i ./data/MakeReference/HAPMAP_CEU -ped data/MakeReference_old/HAPMAP_CEU_HLA.ped -hg 18 -o ./TEST_previous_20180716
+
+
+[Example 2-1] Implementing new version/ imgt370 / hg18
+
+python3 MakeReference.py -i ./data/MakeReference/HAPMAP_CEU -ped data/MakeReference/HAPMAP_CEU_HLA.4field.ped -hg 18 -o ./NEWVERSION_imgt370_hg18/HAPMAP_CEU -dict-AA data/MakeReference/HLA_DICTIONARY_AA.hg18.imgt370.txt -dict-AA-map ./data/MakeReference/HLA_DICTIONARY_AA.hg18.imgt370.map -dict-SNPS ./data/MakeReference/HLA_DICTIONARY_SNPS.hg18.imgt370.txt -dict-SNPS-map ./data/MakeReference/HLA_DICTIONARY_SNPS.hg18.imgt370.map
+
+
+[Example 2-2] Implementing new version/ imgt370 / hg19
+
+python3 MakeReference.py -i ./data/MakeReference/HAPMAP_CEU -ped ./data/MakeReference/HAPMAP_CEU_HLA.4field.ped -hg 19 -o NEWVERSION_imgt370_hg19/HAPMAP_CEU -dict-AA data/MakeReference/HLA_DICTIONARY_AA.hg19.imgt370.txt -dict-AA-map ./data/MakeReference/HLA_DICTIONARY_AA.hg19.imgt370.map -dict-SNPS ./data/MakeReference/HLA_DICTIONARY_SNPS.hg19.imgt370.txt -dict-SNPS-map ./data/MakeReference/HLA_DICTIONARY_SNPS.hg19.imgt370.map
+
+
+[Example 2-2] Implementing new version/ imgt3320 / hg19
+
+python3 MakeReference.py -i data/MakeReference/HAPMAP_CEU -ped data/MakeReference/HAPMAP_CEU_HLA.4field.ped -hg 19 -o NEWVERSION_imgt3320_hg19 -dict-AA ./data/MakeReference/HLA_DICTIONARY_AA.hg19.imgt3320.txt -dict-AA-map ./data/MakeReference/HLA_DICTIONARY_AA.hg19.imgt3320.map -dict-SNPS ./data/MakeReference/HLA_DICTIONARY_SNPS.hg19.imgt3320.txt -dict-SNPS-map ./data/MakeReference/HLA_DICTIONARY_SNPS.hg19.imgt3320.map
