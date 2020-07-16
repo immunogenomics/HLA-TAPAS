@@ -1,0 +1,2 @@
+HLA_assoc/example/OMNIBUS/WTCCC+1000G_EUR_REF.IMPUTED.bgl.phased.vcf.gz filter=lfs diff=lfs merge=lfs -text
+HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bgl.phased filter=lfs diff=lfs merge=lfs -text
