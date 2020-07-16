@@ -115,9 +115,6 @@ $ python -m Manhattan \
 <br>
 
 
-
-
-
 <!-- 
 ## Development Log
 
