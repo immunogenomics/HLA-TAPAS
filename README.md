@@ -88,7 +88,7 @@ $ python -m MakeReference \
 ```
 $ python -m SNP2HLA \
     --target SNP2HLA/example/1958BC \
-    --reference SNP2HLA/example/T1DGCb37.bglv4 \
+    --reference SNP2HLA/example/HAPMAP_CEU.REF.bglv4 \
     --out MySNP2HLA/IMPUTED.1958BC \
     --nthreads 2 \
     --mem 4g
