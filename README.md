@@ -95,12 +95,26 @@ $ python -m SNP2HLA \
 ```
 
 (4) HLA-assoc
+
+(4-1) Logistic regression
 ```
-$ python -m HLA_assoc \
-    --target HLA_assoc/example/IMPUTED.1958BC.bgl.phased.vcf.gz \
-    --out MyHLAassoc/IMPUTED.1958BC \
-    --pheno example/1958BC.phe \
-    --pheno-name p1
+python -m HLA_assoc LOGISTIC \
+    --vcf HLA_assoc/example/LOGISTIC/IMPUTED.1958BC.bgl.phased.vcf.gz \
+    --out MyLogistic/IMPUTED.1958BC.rev_map \
+    --pheno HLA_assoc/example/LOGISTIC/1958BC.phe \
+    --pheno-name p1 \
+    --hped HLA_assoc/example/LOGISTIC/1958BC.Ggroup.hped \
+    --chped HLA_assoc/example/LOGISTIC/1958BC.imgt3320.4field.chped
+```
+
+(4-2) Omnibus test
+```
+$ python -m HLA_assoc OMNIBUS \
+    --file HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
+    --pop HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --out MyOmnibus/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+    --aa-only \
+    --maf-threshold 0
 ```
 
 (5) Manhattan
