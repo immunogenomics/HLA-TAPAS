@@ -40,6 +40,11 @@ Related to BEAGLE v4.1, after downloading and preparing it in 'dependency/' fold
 
 (Sorry Users! You need to download them yourselves due to copyright issue.)
 
+Then, change the file permission of PLINK.
+```
+$ chmod +x dependency/plink
+```
+
 
 <br>
 <br>
