@@ -9,6 +9,8 @@ Briefly, major updates include
 
 (3) including custom R scripts for performing association and fine-mapping analysis in multiple ancestries. 
 
+Please cite [this paper](https://www.medrxiv.org/content/10.1101/2020.07.16.20155606v1) if you use this pipeline.
+
 ## Requirments & Dependencies
 
 Linux or OS_X environment is required for HLA-TAPAS. HLA-TAPAS currently doesn't support Windows.
