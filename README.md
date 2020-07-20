@@ -38,7 +38,7 @@ Next, the following external softwares need to be prepared in 'dependency/' fold
 - linkage2beagle.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)
 - vcf2beagle.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)
 
-Related to BEAGLE v4.1, after downloading and preparing it in 'dependency/' folder, **RENAME IT TO 'beagle.jar'**.~~
+Related to BEAGLE v4.1, after downloading and preparing it in 'dependency/' folder, **RENAME IT TO 'beagle.jar'**.
 
 (Sorry Users! You need to download them yourselves due to copyright issue.)
 
