@@ -31,16 +31,23 @@ R statistical programming language requires next settings.
 - parallel
 - rcompanion
 
-Also, Next external software have to be prepared in 'dependency/' folder.
-- PLINK v1.9b (https://www.cog-genomics.org/plink2)
-- BEAGLE v4.1 (https://faculty.washington.edu/browning/beagle/b4_1.html#download)
-- beagle2vcf.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)
-- linkage2beagle.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)
-- vcf2beagle.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)
+~~Also, Next external software have to be prepared in 'dependency/' folder.~~
+- ~~PLINK v1.9b (https://www.cog-genomics.org/plink2)~~
+- ~~BEAGLE v4.1 (https://faculty.washington.edu/browning/beagle/b4_1.html#download)~~
+- ~~beagle2vcf.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)~~
+- ~~linkage2beagle.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)~~
+- ~~vcf2beagle.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)~~
 
-Related to BEAGLE v4.1, after downloading and preparing it in 'dependency/' folder, **RENAME IT TO 'beagle.jar'**.
+~~Related to BEAGLE v4.1, after downloading and preparing it in 'dependency/' folder, **RENAME IT TO 'beagle.jar'**.~~
 
-(Sorry Users! You need to download them yourselves due to copyright issue.)
+~~(Sorry Users! You need to download them yourselves due to copyright issue.)~~
+
+**To facilitate the reviewing process of reviewers, the above dependent software are already prepared in the 'dependency/' folder. For reviewer who tests the implementation in OS X(Mac), Please don't forget to replace 'dependency/plink' with 'dependency/plink_mac/plink'.**
+
+Then, change the file permission of PLINK.
+```
+$ chmod +x dependency/plink
+```
 
 
 <br>
@@ -90,19 +97,33 @@ $ python -m MakeReference \
 ```
 $ python -m SNP2HLA \
     --target SNP2HLA/example/1958BC \
-    --reference SNP2HLA/example/T1DGCb37.bglv4 \
+    --reference SNP2HLA/example/HAPMAP_CEU.REF.bglv4 \
     --out MySNP2HLA/IMPUTED.1958BC \
     --nthreads 2 \
     --mem 4g
 ```
 
 (4) HLA-assoc
+
+(4-1) Logistic regression
 ```
-$ python -m HLA_assoc \
-    --target HLA_assoc/example/IMPUTED.1958BC.bgl.phased.vcf.gz \
-    --out MyHLAassoc/IMPUTED.1958BC \
-    --pheno example/1958BC.phe \
-    --pheno-name p1
+python -m HLA_assoc LOGISTIC \
+    --vcf HLA_assoc/example/LOGISTIC/IMPUTED.1958BC.bgl.phased.vcf.gz \
+    --out MyLogistic/IMPUTED.1958BC.rev_map \
+    --pheno HLA_assoc/example/LOGISTIC/1958BC.phe \
+    --pheno-name p1 \
+    --hped HLA_assoc/example/LOGISTIC/1958BC.Ggroup.hped \
+    --chped HLA_assoc/example/LOGISTIC/1958BC.imgt3320.4field.chped
+```
+
+(4-2) Omnibus test
+```
+$ python -m HLA_assoc OMNIBUS \
+    --file HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
+    --pop HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --out MyOmnibus/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+    --aa-only \
+    --maf-threshold 0
 ```
 
 (5) Manhattan

@@ -1,11 +1,22 @@
-# Input
+# SNP2HLA
+
+## (1) Introduction)
 1. SNP dataset (.bed/bim/fam PLINK format)
-2. Reference dataset (.bgl.phased.vcf.gz/.markers Beagle)
+2. Reference dataset (.bgl.phased.vcf.gz/.markers; Beagle4.1)
 
-# Running command
-	`python3 SNP2HLA.py -i DATA(.bed/.bim/.fam) -o OUTPUT -rf REFERENCE(.bgl.phased/.markers) --nthreads NTHREAD --java-mem=MEMORY[GB]`
+## (2) Usage example
 
-# Example
-Run SNP2HLA with sample data provided (10 samples) using the following command:
+SNP2HLA in HLA-TAPAS has to be implemented in the directory of main project folder. (i.e. 'HLA-TAPAS/' where 'HLA-TAPAS.py' script is.)
 
-	python3 SNP2HLA.py -i data/test -o test -rf data/T1DGCb37.bglv4 --nthreads 16 --java-mem=8g
+```
+$ cd ../ 
+# Change your current directory to the HLA-TAPAS main project folder.
+```
+```
+$ python3 -m SNP2HLA \
+	--target SNP2HLA/example/1958BC \
+	--out MySNP2HLA/IMPUTED.1958BC \
+	--reference SNP2HLA/example/T1DGCb37.bglv4 \
+	--nthreads 2 \
+	--mem 4g
+```
