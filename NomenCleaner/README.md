@@ -16,8 +16,6 @@ NomenCleaner converts a given set of HLA alleles which is in arbitrary nomenclat
 
 **Often, the field separator is removed though given HLA allele conforms to the updated nomenclature**. This barely causes a problem in most cases, however, there is definitely some case that may confuse researchers. For example, if the HLA allele **DPB1\*101101** is given, then some researchers may be perplexed as to which one is right among <U>DBP1\*10:11:01</U>, <U>DPB1\*101:101</U> and <U>DPB1\*1011:01</U>. NomenCleaner searches the `HAT(HLA Allele Table)` file, which contains whole HLA allele name information of the IMGT database of a specific version, and determines that **DPB1*1011:01 is the only valid solution**. (cf. DBP1*1011:01 is in the IMGT database of the version 3.37.0.)
 
-
-<br>
 <br>
 
 ## (2) Input & output
@@ -26,7 +24,7 @@ NomenCleaner basically takes `PED` file(e.g. '\*.ped') and `HAT(HLA Allele Table
 You can find more information about the official HLA allele nomenclature defined by "IMGT-HLA" organization([go to IMGT-HLA Nomenclature](http://hla.alleles.org/nomenclature/naming.html)), which indicates that "Maximum 4-field Nomenclature" is currently used as the standard for HLA allele names.
 
 <br>
-This module neither conduct a prediction nor make a guess. It just chooses a first option among possible candidates. For example,if  a HLA allele "A\*01:01" is given, then the possible candidates are
+When converting a lower resolution allele to a higher resolution (two-field to four-field, say), this module neither conduct a prediction nor make a guess. It just chooses a first option among possible candidates. For example,if  a HLA allele "A\*01:01" is given, then the possible candidates are
 
 Allele | G_group | P_group
 -------|---------|---------
