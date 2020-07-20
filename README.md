@@ -9,7 +9,7 @@ Briefly, major updates include
 
 (3) including custom R scripts for performing association and fine-mapping analysis in multiple ancestries. 
 
-Please cite [this paper](https://www.medrxiv.org/content/10.1101/2020.07.16.20155606v1) if you use this pipeline.
+Please cite [this paper](https://www.medrxiv.org/content/10.1101/2020.07.16.20155606v1) if you choose to use this work.
 
 ## Requirments & Dependencies
 
@@ -70,12 +70,21 @@ Last two arguments are for Java Heap memory size and the number of threads to be
 
 Each main module of HLA-TAPAS can be implemented separately.
 
-(1) NomenCleaner
+(1) Format of *HLA* types ([NomenCleaner](./NomenCleaner))
+
+Code adapted from HATK: https://github.com/WansonChoi/HATK
+
+**NomenCleaner** transforms a ped file with *HLA* alleles in various form to new ped file of which HLA alleles are in the form which user requests (e.g., "two-field", "G-group").
+
+A HLA PED file contains the *HLA* alleles typed at different resolutions (FID,IID,pID,mID,SEX,PHENO,A,B,C,DPA1,DPB1,DQA1,DQB1,DRB1).
+
+Please refer to the [NomenCleaner](./NomenCleaner) module for more details. An example usage is given below:
+
 ```
 $ python -m NomenCleaner \
-    --hped NomenCleaner/example/wtccc_filtered_58C_RA.hatk.300+300.hped \
-    --out RESULT_EXAMPLE_wtccc_filtered_58C_RA.hatk.300+300.chr6.hg18.Ggroup \
-    --Ggroup
+    --hped NomenCleaner/example/g1k_subset.ped \
+    --out NomenCleaner/example/g1k_subset \
+    --4field
 ```
 
 (2) MakeReference
