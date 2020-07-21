@@ -11,9 +11,10 @@ You would need to files to get started with the panel making:
 2. *HLA* alleles (after [NomenCleaner](../NomenCleaner)) for each individual included in 1 (\*.chped)
 
 MakeReference will output 
-1. a combined and **phased** HLA reference panel for imputing (in vcf format) 
-2. a maker file with all the markers included in the reference panel
-3. a frequency file (\*.frq) with all marker frequencies
+1. the new reference panel in PLINK format (**unphased**) containing SNPs, *HLA* alleles, HLA amino acids and HLA intergenic SNPs (\*.bed/bim/fam)
+2. a combined and **phased** HLA reference panel for imputing (in vcf format) 
+3. a maker file (\*.markers) with all the markers included in the reference panel 
+4. a frequency file (\*.frq) with all marker frequencies
 
 ## (3) Usage example
 
