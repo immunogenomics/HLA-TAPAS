@@ -90,15 +90,15 @@ $ python -m NomenCleaner \
 ### (2) Building a reference panel ([MakeReference](./MakeReference))
 **MakeReference** builds a reference panel that can be used for HLA imputation. It is an updated version of the [SNP2HLA](http://software.broadinstitute.org/mpg/snp2hla/), that uses BEAGLE v4.1 instead of v3 for phasing and imputation.
 
-It builts on previous version on SNP2HLA A reference panel built by 2,504 individuals from the 1000 Genomes project is avaiable [here](./resources). 
+A reference panel built by 2,504 individuals from the 1000 Genomes project is avaiable [here](./resources). 
 
 Please refer to the [MakeReference](./MakeReference) tapa for more details. An example usage is given below:
 ```
 $ python -m MakeReference \
-    --variants MakeReference/example/HAPMAP_CEU \
-    --chped MakeReference/example/HAPMAP_CEU_HLA.imgt3320.4field.chped \
+    --variants  MakeReference/example/g1k_subset_snps\
+    --chped MakeReference/example/g1k_subset.chped \
     --hg 19 \
-    --out MyRef/HAPMAP_CEU.REF.bglv4 \
+    --out MakeReference/example/g1k_subset.bglv4 \
     --dict-AA MakeReference/data/hg19/HLA_DICTIONARY_AA.hg19.imgt3320 \
     --dict-SNPS MakeReference/data/hg19/HLA_DICTIONARY_SNPS.hg19.imgt3320 \
     --phasing
