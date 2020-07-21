@@ -88,7 +88,7 @@ $ python -m NomenCleaner \
 ```
 
 ### (2) Building a reference panel ([MakeReference](./MakeReference))
-**MakeReference** builds a reference panel that can be used for HLA imputation. It is an updated version of the [SNP2HLA](http://software.broadinstitute.org/mpg/snp2hla/), that uses BEAGLE v4.1 instead of v3 for phasing and imputation.
+**MakeReference** builds a reference panel that can be used for HLA imputation. It is an updated version of the [SNP2HLA](http://software.broadinstitute.org/mpg/snp2hla/), that uses BEAGLE v4 instead of v3 for phasing.
 
 A reference panel built by 2,504 individuals from the 1000 Genomes project is avaiable [here](./resources). 
 
@@ -104,7 +104,11 @@ $ python -m MakeReference \
     --phasing
 ```
 
-### (3) SNP2HLA
+### (3) HLA imputation ([SNP2HLA](./SNP2HLA))
+**SNP2HLA** tapa is for amino acid and SNP imputation in the extend major histocompatibity complext (MHC) region in chromosome 6 (28-35Mb). It is an updated version of the previous [SNP2HLA](http://software.broadinstitute.org/mpg/snp2hla/) that uses BEALGE v4 instead v3 for imputation.
+
+Please refer to the ([SNP2HLA](./SNP2HLA)) tapa for more details. An example usage is given below:
+
 ```
 $ python -m SNP2HLA \
     --target SNP2HLA/example/1958BC \
