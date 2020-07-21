@@ -10,7 +10,10 @@ You would need to files to get started with the panel making:
 1. A file (in PLINK format) with all genotyped/sequenced genomic markers (\*.bed/bim/fam)
 2. *HLA* alleles (after [NomenCleaner](../NomenCleaner)) for each individual included in 1 (\*.chped)
 
-MakeReference will output a combined and **phased** HLA reference panel for imputing (in vcf format) and a maker file.
+MakeReference will output 
+1. a combined and **phased** HLA reference panel for imputing (in vcf format) 
+2. a maker file with all the markers included in the reference panel
+3. a frequency file (\*.frq) with all marker frequencies
 
 ## (3) Usage example
 
@@ -23,10 +26,10 @@ $ cd ../
 
 ```
 $ python -m MakeReference \
-    --variants MakeReference/example/HAPMAP_CEU \ # this is your marker file in the PLINK format
-    --chped MakeReference/example/HAPMAP_CEU_HLA.imgt3320.4field.chped \ # this file includes all HLA types
+    --variants  MakeReference/example/g1k_subset_snps\ # this is your marker file in the PLINK format
+    --chped MakeReference/example/g1k_subset.chped \ # this file includes all HLA types
     --hg 19 \
-    --out MyRef/HAPMAP_CEU.REF.bglv4 \
+    --out MakeReference/example/g1k_subset.bglv4 \
     --dict-AA MakeReference/data/hg19/HLA_DICTIONARY_AA.hg19.imgt3320 \
     --dict-SNPS MakeReference/data/hg19/HLA_DICTIONARY_SNPS.hg19.imgt3320 \
     --phasing
