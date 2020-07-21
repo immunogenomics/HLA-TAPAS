@@ -1,11 +1,11 @@
 # HLA-TAPAS
-**HLA-TAPAS** (HLA-Typing At Protein for Association Studies) is an HLA-focused pipeline that can handle HLA reference panel construction (*MakeReference*), HLA imputation (*SNP2HLA*), and HLA association (*HLAassoc*). 
-It is an updated version of the [SNP2HLA](http://software.broadinstitute.org/mpg/snp2hla/). 
+**HLA-TAPAS** (HLA-Typing At Protein for Association Studies) is an HLA-focused pipeline that can handle HLA reference panel construction (*MakeReference*), HLA imputation (*SNP2HLA*), and HLA association (*HLAassoc*).
+
 Briefly, major updates include 
 
 (1) using PLINK-v1.9 instead of v1.07; 
 
-(2) using BEAGLE v4.1 (URLs) instead of v3 for phasing and imputation; and 
+(2) using BEAGLE v4.1 instead of v3 for phasing and imputation; and 
 
 (3) including custom R scripts for performing association and fine-mapping analysis in multiple ancestries. 
 
@@ -68,9 +68,9 @@ $ python HLA-TAPAS.py \
 ```
 Last two arguments are for Java Heap memory size and the number of threads to be used in Beagle. Users can specify those values on their own.
 
-Each main module of HLA-TAPAS can be implemented separately.
+Each main module (tapa) of HLA-TAPAS can be implemented separately.
 
-(1) Format of *HLA* types ([NomenCleaner](./NomenCleaner))
+### (1) Formatting *HLA* alleles ([NomenCleaner](./NomenCleaner))
 
 Code adapted from HATK: https://github.com/WansonChoi/HATK
 
@@ -78,7 +78,7 @@ Code adapted from HATK: https://github.com/WansonChoi/HATK
 
 A HLA PED file contains the *HLA* alleles typed at different resolutions (FID,IID,pID,mID,SEX,PHENO,A,B,C,DPA1,DPB1,DQA1,DQB1,DRB1).
 
-Please refer to the [NomenCleaner](./NomenCleaner) module for more details. An example usage is given below:
+Please refer to the [NomenCleaner](./NomenCleaner) tapa for more details. An example usage is given below:
 
 ```
 $ python -m NomenCleaner \
@@ -87,7 +87,12 @@ $ python -m NomenCleaner \
     --4field
 ```
 
-(2) MakeReference
+### (2) Building a reference panel ([MakeReference](./MakeReference))
+**MakeReference** builds a reference panel that can be used for HLA imputation. It is an updated version of the [SNP2HLA](http://software.broadinstitute.org/mpg/snp2hla/), that uses BEAGLE v4.1 instead of v3 for phasing and imputation.
+
+It builts on previous version on SNP2HLA A reference panel built by 2,504 individuals from the 1000 Genomes project is avaiable [here](./resources). 
+
+Please refer to the [MakeReference](./MakeReference) tapa for more details. An example usage is given below:
 ```
 $ python -m MakeReference \
     --variants MakeReference/example/HAPMAP_CEU \
@@ -99,7 +104,7 @@ $ python -m MakeReference \
     --phasing
 ```
 
-(3) SNP2HLA
+### (3) SNP2HLA
 ```
 $ python -m SNP2HLA \
     --target SNP2HLA/example/1958BC \
@@ -109,9 +114,9 @@ $ python -m SNP2HLA \
     --mem 4g
 ```
 
-(4) HLA-assoc
+### (4) HLA-assoc
 
-(4-1) Logistic regression
+#### (4-1) Logistic/Linear regression
 ```
 python -m HLA_assoc LOGISTIC \
     --vcf HLA_assoc/example/LOGISTIC/IMPUTED.1958BC.bgl.phased.vcf.gz \
@@ -122,7 +127,7 @@ python -m HLA_assoc LOGISTIC \
     --chped HLA_assoc/example/LOGISTIC/1958BC.imgt3320.4field.chped
 ```
 
-(4-2) Omnibus test
+#### (4-2) Omnibus test
 ```
 $ python -m HLA_assoc OMNIBUS \
     --file HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
@@ -132,7 +137,7 @@ $ python -m HLA_assoc OMNIBUS \
     --maf-threshold 0
 ```
 
-(5) Manhattan
+### (5) Manhattan
 ```
 $ python -m Manhattan \
     --assoc-result Manhattan/example/1958BC+HM_CEU_REF.IMPUTED.assoc.logistic \
