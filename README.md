@@ -112,7 +112,7 @@ Please refer to the ([SNP2HLA](./SNP2HLA)) tapa for more details. An example usa
 ```
 $ python -m SNP2HLA \
     --target SNP2HLA/example/1958BC \
-    --reference SNP2HLA/example/HAPMAP_CEU.REF.bglv4 \
+    --reference resources/1000G.bglv4 \
     --out MySNP2HLA/IMPUTED.1958BC \
     --nthreads 2 \
     --mem 4g
