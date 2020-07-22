@@ -1,0 +1,25 @@
+PLINK v1.90b3w 64-bit (3 Sep 2015)
+Options in effect:
+  --bfile SNP2HLA/example/1958BC
+  --out 1958BC
+  --recode vcf-iid bgz
+
+Hostname: login03.broadinstitute.org
+Working directory: /medpop/srlab/yang/GitHub/HLA-TAPAS
+Start time: Wed Jul 22 10:06:44 2020
+
+Random number seed: 1595426804
+7802 MB RAM detected; reserving 3901 MB for main workspace.
+Allocated 291 MB successfully, after larger attempt(s) failed.
+1908 variants loaded from .bim file.
+10 people (9 males, 1 female) loaded from .fam.
+10 phenotype values loaded from .fam.
+Using 1 thread.
+Before main variant filters, 10 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+Total genotyping rate is 0.999895.
+1908 variants and 10 people pass filters and QC.
+Among remaining phenotypes, 0 are cases and 10 are controls.
+--recode vcf-iid bgz to 1958BC.vcf.gz ... done.
+
+End time: Wed Jul 22 10:06:44 2020
