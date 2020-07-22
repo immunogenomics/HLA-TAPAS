@@ -1,11 +1,32 @@
-# Input
-1. SNP dataset (.bed/bim/fam PLINK format)
-2. Reference dataset (.bgl.phased.vcf.gz/.markers Beagle)
+# SNP2HLA
 
-# Running command
-	`python3 SNP2HLA.py -i DATA(.bed/.bim/.fam) -o OUTPUT -rf REFERENCE(.bgl.phased/.markers) --nthreads NTHREAD --java-mem=MEMORY[GB]`
+## (1) Introduction
+SNP2HLA module (tapa) performs HLA imputation (amino acids, *HLA* alleles and SNPs) using genotyping data.
 
-# Example
-Run SNP2HLA with sample data provided (10 samples) using the following command:
+## (2) Input & output
 
-	python3 SNP2HLA.py -i data/test -o test -rf data/T1DGCb37.bglv4 --nthreads 16 --java-mem=8g
+You would need two things for HLA imputation:
+
+1. A GWAS dataset contains the MHC region (.bed/bim/fam PLINK format)
+**N.B.: due to the BEAGLE update, unlike SNP2HLA-v1, the correct genomic build (hg19/Grch38) is now important for imputation**
+2. Reference dataset (.bgl.phased.vcf.gz/.markers/.FRQ.frq/.bim; output from the [MakeReference](../MakeReference) module)
+
+After imputaton, SNP2HLA will output a single vcf file (\*.bgl.phased.vcf.gz).
+
+
+## (2) Usage example
+
+SNP2HLA in HLA-TAPAS has to be implemented in the directory of main project folder. (i.e. 'HLA-TAPAS/' where 'HLA-TAPAS.py' script is.)
+
+```
+$ cd ../ 
+# Change your current directory to the HLA-TAPAS main project folder.
+```
+```
+$ python3 -m SNP2HLA \
+	--target SNP2HLA/example/1958BC \
+	--out SNP2HLA/example/IMPUTED.1958BC \
+	--reference resources/1000G.bglv4 \
+	--nthreads 2 \
+	--mem 4g
+```

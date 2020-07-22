@@ -1,0 +1,145 @@
+beagle.27Jun16.b16.jar (version 4.1)
+Copyright (C) 2014-2015 Brian L. Browning
+Enter "java -jar beagle.27Jun16.b16.jar" for a summary of command line arguments.
+Start time: 01:40 AM EDT on 27 Mar 2020
+
+Command line: java -Xmx7111m -jar beagle.jar
+  gt=test.MHC.QC.vcf.gz
+  ref=data/T1DGCb37.bglv4.bgl.phased.vcf.gz
+  impute=true
+  gprobs=true
+  nthreads=16
+  chrom=6
+  niterations=5
+  lowmem=true
+  out=test.bgl.phased
+
+No genetic map is specified: using 1 cM = 1 Mb
+
+reference samples:    5225
+target samples:         10
+
+Window 1 [ 6:29494897-33160425 ]
+reference markers:   19887
+target markers:        552
+
+Starting burn-in iterations
+
+Window=1 Iteration=1
+Time for building model:         14 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 468    max edges/level: 730
+mean edges/node:  1.074  mean count/edge: 22
+
+Window=1 Iteration=2
+Time for building model:         16 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 452    max edges/level: 711
+mean edges/node:  1.071  mean count/edge: 23
+
+Window=1 Iteration=3
+Time for building model:         13 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 476    max edges/level: 723
+mean edges/node:  1.065  mean count/edge: 22
+
+Window=1 Iteration=4
+Time for building model:         14 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 451    max edges/level: 708
+mean edges/node:  1.071  mean count/edge: 23
+
+Window=1 Iteration=5
+Time for building model:         14 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 473    max edges/level: 717
+mean edges/node:  1.066  mean count/edge: 22
+
+Window=1 Iteration=6
+Time for building model:         16 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 451    max edges/level: 697
+mean edges/node:  1.071  mean count/edge: 23
+
+Window=1 Iteration=7
+Time for building model:         13 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 477    max edges/level: 730
+mean edges/node:  1.065  mean count/edge: 22
+
+Window=1 Iteration=8
+Time for building model:         16 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 449    max edges/level: 694
+mean edges/node:  1.071  mean count/edge: 23
+
+Window=1 Iteration=9
+Time for building model:         14 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 480    max edges/level: 731
+mean edges/node:  1.064  mean count/edge: 22
+
+Window=1 Iteration=10
+Time for building model:         15 seconds
+Time for sampling (singles):     0 seconds
+DAG statistics
+mean edges/level: 456    max edges/level: 712
+mean edges/node:  1.069  mean count/edge: 23
+
+Starting phasing iterations
+
+Window=1 Iteration=11
+Time for building model:         15 seconds
+Time for sampling (singles):     4 seconds
+DAG statistics
+mean edges/level: 469    max edges/level: 713
+mean edges/node:  1.066  mean count/edge: 22
+
+Window=1 Iteration=12
+Time for building model:         16 seconds
+Time for sampling (singles):     3 seconds
+DAG statistics
+mean edges/level: 445    max edges/level: 708
+mean edges/node:  1.071  mean count/edge: 24
+
+Window=1 Iteration=13
+Time for building model:         14 seconds
+Time for sampling (singles):     2 seconds
+DAG statistics
+mean edges/level: 473    max edges/level: 712
+mean edges/node:  1.065  mean count/edge: 22
+
+Window=1 Iteration=14
+Time for building model:         16 seconds
+Time for sampling (singles):     2 seconds
+DAG statistics
+mean edges/level: 443    max edges/level: 699
+mean edges/node:  1.072  mean count/edge: 24
+
+Window=1 Iteration=15
+Time for building model:         15 seconds
+Time for sampling (singles):     2 seconds
+DAG statistics
+mean edges/level: 472    max edges/level: 732
+mean edges/node:  1.066  mean count/edge: 22
+
+Imputation time (this window): 4 seconds
+
+Number of reference markers:     19887
+Number of target markers:          552
+Total time for building model: 3 minutes 40 seconds
+Total time for sampling:       14 seconds
+Total time for imputation:     4 seconds
+Total run time:                4 minutes 5 seconds
+
+End time: 01:44 AM EDT on 27 Mar 2020
+beagle.27Jun16.b16.jar (version 4.1) finished

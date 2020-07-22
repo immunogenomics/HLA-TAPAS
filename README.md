@@ -1,15 +1,15 @@
 # HLA-TAPAS
-**HLA-TAPAS** (HLA-Typing At Protein for Association Studies) is an HLA-focused pipeline that can handle HLA reference panel construction (*MakeReference*), HLA imputation (*SNP2HLA*), and HLA association (*HLAassoc*). 
-It is an updated version of the [SNP2HLA](http://software.broadinstitute.org/mpg/snp2hla/). 
+**HLA-TAPAS** (HLA-Typing At Protein for Association Studies) is an HLA-focused pipeline that can handle HLA reference panel construction (*MakeReference*), HLA imputation (*SNP2HLA*), and HLA association (*HLAassoc*).
+
 Briefly, major updates include 
 
 (1) using PLINK-v1.9 instead of v1.07; 
 
-(2) using BEAGLE v4.1 (URLs) instead of v3 for phasing and imputation; and 
+(2) using BEAGLE v4.1 instead of v3 for phasing and imputation; and 
 
 (3) including custom R scripts for performing association and fine-mapping analysis in multiple ancestries. 
 
-Please cite [this paper](https://www.medrxiv.org/content/10.1101/2020.07.16.20155606v1) if you use this pipeline.
+Please cite [this paper](https://www.medrxiv.org/content/10.1101/2020.07.16.20155606v1) if you choose to use this work.
 
 ## Requirments & Dependencies
 
@@ -31,7 +31,7 @@ R statistical programming language requires next settings.
 - parallel
 - rcompanion
 
-Also, Next external software have to be prepared in 'dependency/' folder.
+Next, the following external softwares need to be prepared in 'dependency/' folder.
 - PLINK v1.9b (https://www.cog-genomics.org/plink2)
 - BEAGLE v4.1 (https://faculty.washington.edu/browning/beagle/b4_1.html#download)
 - beagle2vcf.jar (https://faculty.washington.edu/browning/beagle_utilities/utilities.html)
@@ -42,6 +42,10 @@ Related to BEAGLE v4.1, after downloading and preparing it in 'dependency/' fold
 
 (Sorry Users! You need to download them yourselves due to copyright issue.)
 
+Then, change the file permission of PLINK.
+```
+$ chmod +x dependency/plink
+```
 
 <br>
 <br>
@@ -64,48 +68,80 @@ $ python HLA-TAPAS.py \
 ```
 Last two arguments are for Java Heap memory size and the number of threads to be used in Beagle. Users can specify those values on their own.
 
-Each main module of HLA-TAPAS can be implemented separately.
+Each main module (tapa) of HLA-TAPAS can be implemented separately.
 
-(1) NomenCleaner
+### (1) Formatting *HLA* alleles ([NomenCleaner](./NomenCleaner))
+
+Code adapted from HATK: https://github.com/WansonChoi/HATK
+
+**NomenCleaner** transforms a ped file with *HLA* alleles in various form to new ped file of which HLA alleles are in the form which user requests (e.g., "two-field", "G-group").
+
+A HLA PED file contains the *HLA* alleles typed at different resolutions (FID,IID,pID,mID,SEX,PHENO,A,B,C,DPA1,DPB1,DQA1,DQB1,DRB1).
+
+Please refer to the [NomenCleaner](./NomenCleaner) tapa for more details. An example usage is given below:
+
 ```
 $ python -m NomenCleaner \
-    --hped NomenCleaner/example/wtccc_filtered_58C_RA.hatk.300+300.hped \
-    --out RESULT_EXAMPLE_wtccc_filtered_58C_RA.hatk.300+300.chr6.hg18.Ggroup \
-    --Ggroup
+    --hped NomenCleaner/example/g1k_subset.ped \
+    --out NomenCleaner/example/g1k_subset \
+    --4field
 ```
 
-(2) MakeReference
+### (2) Building a reference panel ([MakeReference](./MakeReference))
+**MakeReference** builds a reference panel that can be used for HLA imputation. It is an updated version of the [SNP2HLA](http://software.broadinstitute.org/mpg/snp2hla/), that uses BEAGLE v4 instead of v3 for phasing.
+
+A reference panel built by 2,504 individuals from the 1000 Genomes project is avaiable [here](./resources). 
+
+Please refer to the [MakeReference](./MakeReference) tapa for more details. An example usage is given below:
 ```
 $ python -m MakeReference \
-    --variants MakeReference/example/HAPMAP_CEU \
-    --chped MakeReference/example/HAPMAP_CEU_HLA.imgt3320.4field.chped \
+    --variants  MakeReference/example/g1k_subset_snps\
+    --chped MakeReference/example/g1k_subset.chped \
     --hg 19 \
-    --out MyRef/HAPMAP_CEU.REF.bglv4 \
+    --out MakeReference/example/g1k_subset.bglv4 \
     --dict-AA MakeReference/data/hg19/HLA_DICTIONARY_AA.hg19.imgt3320 \
     --dict-SNPS MakeReference/data/hg19/HLA_DICTIONARY_SNPS.hg19.imgt3320 \
     --phasing
 ```
 
-(3) SNP2HLA
+### (3) HLA imputation ([SNP2HLA](./SNP2HLA))
+**SNP2HLA** tapa is for amino acid and SNP imputation in the extend major histocompatibity complext (MHC) region in chromosome 6 (28-35Mb). It is an updated version of the previous [SNP2HLA](http://software.broadinstitute.org/mpg/snp2hla/) that uses BEALGE v4 instead v3 for imputation.
+
+Please refer to the ([SNP2HLA](./SNP2HLA)) tapa for more details. An example usage is given below:
+
 ```
 $ python -m SNP2HLA \
     --target SNP2HLA/example/1958BC \
-    --reference SNP2HLA/example/T1DGCb37.bglv4 \
+    --reference resources/1000G.bglv4 \
     --out MySNP2HLA/IMPUTED.1958BC \
     --nthreads 2 \
     --mem 4g
 ```
 
-(4) HLA-assoc
+### (4) HLA-assoc
+
+#### (4-1) Logistic/Linear regression
 ```
-$ python -m HLA_assoc \
-    --target HLA_assoc/example/IMPUTED.1958BC.bgl.phased.vcf.gz \
-    --out MyHLAassoc/IMPUTED.1958BC \
-    --pheno example/1958BC.phe \
-    --pheno-name p1
+python -m HLA_assoc LOGISTIC \
+    --vcf HLA_assoc/example/LOGISTIC/IMPUTED.1958BC.bgl.phased.vcf.gz \
+    --out MyLogistic/IMPUTED.1958BC.rev_map \
+    --pheno HLA_assoc/example/LOGISTIC/1958BC.phe \
+    --pheno-name p1 \
+    --hped HLA_assoc/example/LOGISTIC/1958BC.Ggroup.hped \
+    --chped HLA_assoc/example/LOGISTIC/1958BC.imgt3320.4field.chped
 ```
 
-(5) Manhattan
+#### (4-2) Omnibus test
+```
+$ python -m HLA_assoc OMNIBUS \
+    --file HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
+    --pop HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --out MyOmnibus/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+    --aa-only \
+    --maf-threshold 0
+```
+
+### (5) Manhattan
 ```
 $ python -m Manhattan \
     --assoc-result Manhattan/example/1958BC+HM_CEU_REF.IMPUTED.assoc.logistic \
