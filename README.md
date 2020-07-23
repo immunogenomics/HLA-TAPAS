@@ -11,7 +11,7 @@ Briefly, major updates include
 
 Please cite [this paper](https://www.medrxiv.org/content/10.1101/2020.07.16.20155606v1) if you choose to use this work.
 
-<img src="./resources/HLA-TAPAS-pipeline.svg" width="5000" height="620">
+<img src="./resources/HLA-TAPAS-pipeline.png">
 
 
 ## Requirments & Dependencies
