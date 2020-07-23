@@ -121,17 +121,20 @@ $ python -m SNP2HLA \
     --mem 4g
 ```
 
-### (4) HLA-assoc
+### (4) HLAassoc ([HLAassoc][./HLAassoc])
+**HLAassoc** tapa focuses on performing HLA-focused association test using output after performing HLA imputation (using [SNP2HLA](./SNP2HLA) or other softwares). It consists of two types of association - **(4-1)** **singler marker** based association test (HLAassoc LOGISITIC/LINEAR) which is a wrapper around [PLINK](https://www.cog-genomics.org/plink/1.9/assoc) association functions and **(4-2)** a joint **haplotype-based** association analysis at the amino acid level.
+
+Please refer the the ([HLAassoc][./HLAassoc]) tapa for more details. Examples are given below:
 
 #### (4-1) Logistic/Linear regression
 ```
-python -m HLA_assoc LOGISTIC \
-    --vcf HLA_assoc/example/LOGISTIC/IMPUTED.1958BC.bgl.phased.vcf.gz \
+python -m HLAassoc LOGISTIC \
+    --vcf HLAassoc/example/LOGISTIC/IMPUTED.1958BC.bgl.phased.vcf.gz \
     --out MyLogistic/IMPUTED.1958BC.rev_map \
-    --pheno HLA_assoc/example/LOGISTIC/1958BC.phe \
+    --pheno HLAassoc/example/LOGISTIC/1958BC.phe \
     --pheno-name p1 \
-    --hped HLA_assoc/example/LOGISTIC/1958BC.Ggroup.hped \
-    --chped HLA_assoc/example/LOGISTIC/1958BC.imgt3320.4field.chped
+    --hped HLAassoc/example/LOGISTIC/1958BC.Ggroup.hped \
+    --chped HLAassoc/example/LOGISTIC/1958BC.imgt3320.4field.chped
 ```
 
 #### (4-2) Omnibus test
