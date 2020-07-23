@@ -7,7 +7,7 @@ import argparse, textwrap
 from NomenCleaner.NomenCleaner import HATK_NomenCleaner
 from MakeReference.MakeReference_v2 import MakeReference_v2
 from SNP2HLA.SNP2HLA import SNP2HLA
-from HLA_assoc.HLA_assoc import HLA_assoc
+from HLAassoc.HLAassoc import HLAassoc
 from Manhattan.manhattan import Manhattan
 
 # Patterns to use
@@ -41,7 +41,7 @@ def HLA_TAPAS(_target, _reference, _hg, _out, _hped, _chped=None,
     [1] NomenCleaner
     [2] MakeReference_v2
     [3] SNP2HLA
-    [4] HLA_assoc
+    [4] HLAassoc
 
     """
 
@@ -146,10 +146,10 @@ def HLA_TAPAS(_target, _reference, _hg, _out, _hped, _chped=None,
 
 
 
-    ### [4] HLA_assoc
+    ### [4] HLAassoc
 
     # LOGISTIC REGRESSION.
-    ASSOC_STUDY = HLA_assoc('LOGISTIC', _out + '.IMPUTED', _dependency,
+    ASSOC_STUDY = HLAassoc('LOGISTIC', _out + '.IMPUTED', _dependency,
                             _vcf=IMPUTED, _reference_bim=_reference_bim, _covar=_covar, _covar_name=_covar_name,
                             _pheno=_pheno, _pheno_name=_pheno_name, _condition=_condition, _condition_list=_condition_list,
                             _hped=_hped, _chped=CHPED)
@@ -158,7 +158,7 @@ def HLA_TAPAS(_target, _reference, _hg, _out, _hped, _chped=None,
     print(std_MAIN_PROCESS_NAME + "Output Logistic Regression result : '{}'.\n\n".format(LOGISTIC_RESULT))
 
     # OMNIBUS TEST.
-    OMNIBUS = HLA_assoc('OMNIBUS', _out + '.IMPUTED.OMNIBUS', _dependency,
+    OMNIBUS = HLAassoc('OMNIBUS', _out + '.IMPUTED.OMNIBUS', _dependency,
                   _vcf=IMPUTED, _file=None, _pop=_pop, _phased=None, _fam=_target+'.fam', _bim=REFERENCE+'.bim',
                   _pheno=_pheno, _sex=_sex, _pcs=_pcs, _maf_threshold=_maf_threshold,
                   f_aa_only=f_aa_only, _nthreads=1, f_remove_samples_by_haplo=f_remove_samples_by_haplo,
@@ -327,7 +327,7 @@ if __name__ == "__main__":
 
 
 
-    ### [4] HLA_assoc
+    ### [4] HLAassoc
 
     # Common
     parser.add_argument("--pheno", help="\nSpecify phenotype information file (Plink v1.9).\n\n")
