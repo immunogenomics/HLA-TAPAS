@@ -1,14 +1,19 @@
-# HLA_Assoc
+# HLAassoc
 
-## Introduction
-A suite of methods to perform association test. Logistic regression is performed by default.
+## (1) Introduction
+This tapa provides a HLA-focused statistical association analysis. Depends on the disease of focus, we can either apply a linear (quantitative trait) or logisitc (binary trait) for single variant association test. We can also perform a conditional analysis (`--condition` or `--condition-list`) for fine-mapping studies.
+
+Due to the high LD structure within the extended MHC region, a second approach for HLA-focus association studies is **haplotype** based analysis (`OMNIBUS). For each amino acid position, we perform a multiallelic association between trait of interest and a haplotype matrix (of the amino acid positions). To get an omnibus P-value for each position, we estimated the effect of each amino acid by assessing the significance of the improvement in fit by calculating the in-model fit, compared to a null model following an F-distribution with m-1 degrees of freedom, where m is the number of residues in an amino acid position. This is implemented using an ANOVA test in R. The most frequent haplotype was excluded from a haplotype matrix as a reference haplotype for association. 
 
 <br>
-<br>
 
-## Usage examples
+## (2) Input and output
+You would need the imputed vcf file and a phenotype file to start your association test. You can alsp provide other covariates using the `--covar` flag.
 
-HLA_assoc in HLA-TAPAS has to be implemented in the directory of main project folder. (i.e. 'HLA-TAPAS/' where 'HLA-TAPAS.py' script is.)
+
+## (3) Usage examples
+
+HLAassoc in HLA-TAPAS has to be implemented in the directory of main project folder. (i.e. 'HLA-TAPAS/' where 'HLA-TAPAS.py' script is.)
 
 ```
 $ cd ../ 
@@ -20,29 +25,43 @@ $ cd ../
 ### **(1) Logistic Regression**
 
 ```
-$ python -m HLA_assoc LOGISTIC \
-    --vcf HLA_assoc/example/LOGISTIC/IMPUTED.1958BC.bgl.phased.vcf.gz \
-    --out MyLogistic/IMPUTED.1958BC \
-    --pheno HLA_assoc/example/LOGISTIC/1958BC.phe \
+$ python -m HLAassoc LOGISTIC \
+    --vcf HLAassoc/example/IMPUTED.1958BC.bgl.phased.vcf.gz \
+    --out Myassoc/IMPUTED.1958BC \
+    --pheno HLAassoc/example/1958BC.phe \
     --pheno-name p1
 ```
 
-If user wants to make HLA marker have un-transformed allele name, i.e. allele name in *.hped not *.chped, then user can get this by passing '--hped' and '--chped' arguments.
+If user wants to make HLA marker have un-transformed allele name, say if your reference panel is only at the G-group resolution, you might want to transform the 4-field alleles back to G-group alleles for association studies. Users can get this by passing '--hped' and '--chped' arguments.
 
 ```
-$ python -m HLA_assoc LOGISTIC \
-    --vcf HLA_assoc/example/LOGISTIC/IMPUTED.1958BC.bgl.phased.vcf.gz \
-    --out MyLogistic/IMPUTED.1958BC.rev_map \
-    --pheno HLA_assoc/example/LOGISTIC/1958BC.phe \
+$ python -m HLAassoc LOGISTIC \
+    --vcf HLAassoc/example/IMPUTED.1958BC.bgl.phased.vcf.gz \
+    --out Myassoc/IMPUTED.1958BC.rev_map \
+    --pheno HLassoc/example/1958BC.phe \
     --pheno-name p1 \
-    --hped HLA_assoc/example/LOGISTIC/1958BC.Ggroup.hped \
-    --chped HLA_assoc/example/LOGISTIC/1958BC.imgt3320.4field.chped
+    --hped HLAassoc/example/1958BC.Ggroup.hped \
+    --chped HLAassoc/example/1958BC.imgt3320.4field.chped
 ```
 
 <br>
 <br>
 
-### **(2) Omnibus Test**
+### **(2) Linear Regression **
+
+Similar to the logisitc regression, here's how linear regression works:
+
+```
+$ python -m HLAassoc LOGISTIC \
+    --vcf HLAassoc/example/IMPUTED.1958BC.bgl.phased.vcf.gz \
+    --out Myassoc/IMPUTED.1958BC \
+    --pheno HLAassoc/example/1958BC.phe \
+    --pheno-name p2
+```
+<br>
+<br>
+
+### **(3) Omnibus Test**
 
 Omnibus Test requires next 7 files, each of which contains necessary information for Omnibus Test.
 
