@@ -3,12 +3,12 @@
 ## (1) Introduction
 This tapa provides a HLA-focused statistical association analysis. Depends on the disease of focus, we can either apply a linear (quantitative trait) or logisitc (binary trait) for single variant association test. We can also perform a conditional analysis (`--condition` or `--condition-list`) for fine-mapping studies.
 
-Due to the high LD structure within the extended MHC region, a second approach for HLA-focus association studies is **haplotype** based analysis (`OMNIBUS). For each amino acid position, we perform a multiallelic association between trait of interest and a haplotype matrix (of the amino acid positions). To get an omnibus P-value for each position, we estimated the effect of each amino acid by assessing the significance of the improvement in fit by calculating the in-model fit, compared to a null model following an F-distribution with m-1 degrees of freedom, where m is the number of residues in an amino acid position. This is implemented using an ANOVA test in R. The most frequent haplotype was excluded from a haplotype matrix as a reference haplotype for association. 
+Due to the high LD structure within the extended MHC region, a **haplotype** based (`OMNIBUS`) approach is often implemented in the HLA fine-mapping studies. For each amino acid position, we perform a multiallelic association between trait of interest and a haplotype matrix (of the amino acid positions). To get an omnibus P-value for each position, we estimated the effect of each amino acid by assessing the significance of the improvement in fit by calculating the in-model fit, compared to a null model following an F-distribution with m-1 degrees of freedom, where m is the number of residues in an amino acid position. This is implemented using an ANOVA test in R. The most frequent haplotype was excluded from a haplotype matrix as a reference haplotype for association. 
 
 <br>
 
 ## (2) Input and output
-You would need the imputed vcf file and a phenotype file to start your association test. You can alsp provide other covariates using the `--covar` flag.
+You would need the imputed `vcf` file and a phenotype file (`--pheno`) to start your association test. You can alsp provide other covariates using the `--covar` flag.
 
 
 ## (3) Usage examples
@@ -22,7 +22,7 @@ $ cd ../
 
 <br>
 
-### **(1) Logistic Regression**
+### (a) Logistic Regression
 
 ```
 $ python -m HLAassoc LOGISTIC \
@@ -47,7 +47,7 @@ $ python -m HLAassoc LOGISTIC \
 <br>
 <br>
 
-### **(2) Linear Regression **
+### (b) Linear Regression 
 
 Similar to the logisitc regression, here's how linear regression works:
 
@@ -61,7 +61,7 @@ $ python -m HLAassoc LOGISTIC \
 <br>
 <br>
 
-### **(3) Omnibus Test**
+### (c) Omnibus Test
 
 Omnibus Test requires next 7 files, each of which contains necessary information for Omnibus Test.
 
