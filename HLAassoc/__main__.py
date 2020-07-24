@@ -4,20 +4,20 @@
 #import os, sys, re
 import argparse, textwrap
 
-from HLA_assoc.HLA_assoc import HLA_assoc
+from HLAassoc.HLAassoc import HLAassoc
 
 
 
 if __name__ == "__main__":
 
 
-    parser = argparse.ArgumentParser(prog='HLA_assoc',
+    parser = argparse.ArgumentParser(prog='HLAassoc',
                                      add_help=False,
                                      formatter_class=argparse.RawTextHelpFormatter,
                                      description=textwrap.dedent('''\
     #################################################################################################
 
-        HLA-assoc
+        HLAassoc
 
         Supervisor : WansonChoi
         E-mail : wansonchoi@snu.ac.kr
@@ -168,14 +168,14 @@ if __name__ == "__main__":
     # Main implementation
 
     if args.Main_Menu == 'LOGISTIC':
-        HLA_assoc(args.Main_Menu, args.out, args.dependency,
+        HLAassoc(args.Main_Menu, args.out, args.dependency,
                   _vcf=args.vcf, _reference_bim=args.reference_bim,
                   _covar=args.covar, _covar_name=args.covar_name, _pheno=args.pheno, _pheno_name=args.pheno_name,
                   _condition=args.condition, _condition_list=args.condition_list,
                   _hped=args.hped, _chped=args.chped, _hat=args.hat)
 
     elif args.Main_Menu == 'OMNIBUS':
-        HLA_assoc(args.Main_Menu, args.out, args.dependency,
+        HLAassoc(args.Main_Menu, args.out, args.dependency,
                   _vcf=args.vcf, _file=args.file, _pop=args.pop, _phased=args.phased, _fam=args.fam, _bim=args.bim,
                   _pheno=args.pheno, _sex=args.sex, _pcs=args.pcs, _maf_threshold=args.maf_threshold,
                   f_aa_only=args.aa_only, _nthreads=args.nthreads, f_remove_samples_by_haplo=args.remove_samples_by_haplo,

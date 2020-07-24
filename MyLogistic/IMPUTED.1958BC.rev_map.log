@@ -1,0 +1,32 @@
+PLINK v1.90b3w 64-bit (3 Sep 2015)
+Options in effect:
+  --allow-no-sex
+  --ci 0.95
+  --logistic hide-covar
+  --out MyLogistic/IMPUTED.1958BC.rev_map
+  --pheno HLAassoc/example/LOGISTIC/1958BC.phe
+  --pheno-name p1
+  --vcf MyLogistic/IMPUTED.1958BC.rev_map.rev_mapped.vcf.gz
+
+Hostname: uger-c005.broadinstitute.org
+Working directory: /medpop/srlab/yang/GitHub/HLA-TAPAS
+Start time: Fri Jul 24 13:23:19 2020
+
+Random number seed: 1595596999
+128714 MB RAM detected; reserving 64357 MB for main workspace.
+--vcf: MyLogistic/IMPUTED.1958BC.rev_map-temporary.bed +
+MyLogistic/IMPUTED.1958BC.rev_map-temporary.bim +
+MyLogistic/IMPUTED.1958BC.rev_map-temporary.fam written.
+14474 variants loaded from .bim file.
+10 people (0 males, 0 females, 10 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to MyLogistic/IMPUTED.1958BC.rev_map.nosex .
+10 phenotype values present after --pheno.
+Using 1 thread (no multithreaded calculations invoked.
+Before main variant filters, 10 founders and 0 nonfounders present.
+Calculating allele frequencies... done.
+14474 variants and 10 people pass filters and QC.
+Among remaining phenotypes, 6 are cases and 4 are controls.
+Writing logistic model association results to
+MyLogistic/IMPUTED.1958BC.rev_map.assoc.logistic ... done.
+
+End time: Fri Jul 24 13:23:19 2020
