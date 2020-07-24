@@ -122,27 +122,38 @@ $ python -m SNP2HLA \
 ```
 
 ### (4) HLAassoc ([HLAassoc](./HLAassoc))
-**HLAassoc** tapa focuses on performing HLA-focused association test using output after performing HLA imputation (using [SNP2HLA](./SNP2HLA) or other softwares). It consists of two types of association - **(4-1)** **singler marker** based association test (HLAassoc LOGISITIC/LINEAR) which is a wrapper around [PLINK](https://www.cog-genomics.org/plink/1.9/assoc) association functions and **(4-2)** a joint **haplotype-based** association analysis at the amino acid level.
+**HLAassoc** tapa focuses on performing HLA-focused association test using output after performing HLA imputation (using [SNP2HLA](./SNP2HLA) or other softwares). It consists of two types of association - **singler marker** based association test (HLAassoc **(4-1)** LOGISITIC; **(4-2)** LINEAR) which is a wrapper around [PLINK](https://www.cog-genomics.org/plink/1.9/assoc) association functions and **(4-3)** a joint **haplotype-based** association analysis at the amino acid level.
 
 Please refer the the ([HLAassoc](./HLAassoc)) tapa for more details. Examples are given below:
 
-#### (4-1) Logistic/Linear regression
+#### (4-1) Logistic regression
 ```
 python -m HLAassoc LOGISTIC \
-    --vcf HLAassoc/example/LOGISTIC/IMPUTED.1958BC.bgl.phased.vcf.gz \
-    --out MyLogistic/IMPUTED.1958BC.rev_map \
-    --pheno HLAassoc/example/LOGISTIC/1958BC.phe \
+    --vcf HLAassoc/example/IMPUTED.1958BC.bgl.phased.vcf.gz \
+    --out Myassoc/IMPUTED.1958BC.rev_map \
+    --pheno HLAassoc/example/1958BC.phe \
     --pheno-name p1 \
-    --hped HLAassoc/example/LOGISTIC/1958BC.Ggroup.hped \
-    --chped HLAassoc/example/LOGISTIC/1958BC.imgt3320.4field.chped
+    --hped HLAassoc/example/1958BC.Ggroup.hped \
+    --chped HLAassoc/example/1958BC.imgt3320.4field.chped
 ```
 
-#### (4-2) Omnibus test
+#### (4-2) Linear regression
 ```
-$ python -m HLA_assoc OMNIBUS \
-    --file HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
-    --pop HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
-    --out MyOmnibus/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+python -m HLAassoc LINEAR \
+    --vcf HLAassoc/example/IMPUTED.1958BC.bgl.phased.vcf.gz \
+    --out Myassoc/IMPUTED.1958BC.rev_map \
+    --pheno HLAassoc/example/1958BC.phe \
+    --pheno-name p2 \
+    --hped HLAassoc/example/1958BC.Ggroup.hped \
+    --chped HLAassoc/example/1958BC.imgt3320.4field.chped
+```
+
+#### (4-3) Omnibus test
+```
+$ python -m HLAassoc OMNIBUS \
+    --file HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
+    --pop HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --out Myassoc/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```

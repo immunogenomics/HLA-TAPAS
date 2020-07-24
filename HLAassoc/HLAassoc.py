@@ -33,6 +33,16 @@ class HLAassoc(object):
             _hped=None, _chped=None, _hat=None,
         )
 
+        (2) Linear Regression (`_MAIN_MENU` == 'LINEAR')
+
+        __init__(self, _MAIN_MENU, _out, _dependency='./dependency'
+            _vcf,
+            _reference_bim=None,
+            _covar=None, _covar_name=None, _pheno=None, _pheno_name=None,
+            _condition=None, _condition_list=None,
+            _hped=None, _chped=None, _hat=None,
+        )
+
         (2) Omnibus Test (`_MAIN_MENU` == 'OMNIBUS')
         __init__(self, _MAIN_MENU, _out, _dependency='./dependency'
             _vcf=None,
@@ -245,6 +255,134 @@ class HLAassoc(object):
                                          _condition=_condition, _condition_list=_condition_list,
                                          f_asBETA=False, _a1_allele=self.a1_allele)
 
+        elif _MAIN_MENU == 'LINEAR':
+
+
+            ## Argument Parsing
+            _vcf = kwargs['_vcf']
+            _reference_bim = kwargs['_reference_bim']
+            _covar = kwargs['_covar']
+            _covar_name = kwargs['_covar_name']
+            _pheno = kwargs['_pheno']
+            _pheno_name = kwargs['_pheno_name']
+            _condition = kwargs['_condition']
+            _condition_list = kwargs['_condition_list']
+            _hped = kwargs['_hped']
+            _chped = kwargs['_chped']
+            # _hat = kwargs['_hat']
+
+
+
+            ## Main variables.
+            self.assoc_result = None
+
+            self.vcf = None
+            self.a1_allele = None
+            self.pheno = None
+            self.pheno_name = None
+            self.covar = None
+            self.covar_name = None
+            self.condition = None
+            self.condition_list = None
+
+
+
+            ## Dependency check
+
+            # PLINK
+            if exists(join(_dependency, 'plink')):
+                self.plink = join(_dependency, 'plink')
+            else:
+                print(std_ERROR_MAIN_PROCESS_NAME + "Please Prepare 'PLINK' (http://pngu.mgh.harvard.edu/~purcell/plink/download.shtml) in '{0}'\n".format(_dependency))
+                sys.exit()
+
+
+
+            ## Conversion from VCF to PLINK.
+            if not exists(_vcf):
+                print(std_ERROR_MAIN_PROCESS_NAME + "Target data can't be found.('{}') Please check '--target/-t' argument again.".format(_vcf))
+                sys.exit()
+            else:
+                if _vcf.endswith('.vcf.gz') or _vcf.endswith('.vcf'):
+                    self.vcf = _vcf
+                else:
+                    print(std_ERROR_MAIN_PROCESS_NAME + "Given VCF file('{}') doesn't have file extension either '*.vcf.gz' or '*.vcf'. Please check '--target/-t' argument again.".format(_vcf))
+
+
+
+            ## Decoding bim file (Whether to use reference bim file or not.)
+            # if bool(_reference_bim) and exists(_reference_bim):
+            #     self.bim = _reference_bim
+
+
+
+            ## Reverse-map HLA marker label.
+            if bool(_hped) and bool(_chped):
+
+                if exists(_hped) and exists(_chped):
+                    self.vcf = reverse_map(self.vcf,
+                                           join(self.out_dirname, basename(_out).rstrip('.vcf.gz') + '.rev_mapped.vcf.gz'),
+                                           _hped, _chped)
+                    # print(self.vcf)
+
+                else:
+                    if not exists(_hped):
+                        print(std_WARNING_MAIN_PROCESS_NAME + "HPED file can't be found('{}'). Please check '--hped' argument again.\n"
+                                                              "Skipping Reverse-mapping of HLA marker labels.".format(_hped))
+                    if not exists(_chped):
+                        print(std_WARNING_MAIN_PROCESS_NAME + "CHPED file can't be found('{}'). Please check '--chped' argument again.\n"
+                                                              "Skipping Reverse-mapping of HLA marker labels.".format(_chped))
+
+
+            ## Phenotype file check
+            if bool(_pheno):
+                if exists(_pheno):
+                    # Phenotype file is given.
+                    self.pheno = _pheno
+
+                    if bool(_pheno_name):
+                        # Which phenotype column name to use is given.
+                        self.pheno_name = _pheno_name
+                    else:
+                        # Phenotype header check.
+                        with open(_pheno, 'r') as f_pheno:
+
+                            header = next(f_pheno)
+                            l_header = re.split(r'\s+', header.rstrip('\n'))
+
+                            if len(l_header) > 3:
+                                # can't determine which phenotype name to use.
+                                print(std_ERROR_MAIN_PROCESS_NAME + "can't determined which Phenotype column to use.('{}') "
+                                                                    "Please specify which column to use with '--pheno-name' argument." \
+                                      .format(_pheno))
+                                sys.exit()
+
+                            elif len(l_header) == 3:
+                                # Set the only phenotype column name as the one to use.
+                                self.pheno_name = l_header[-1]
+                                print(std_WARNING_MAIN_PROCESS_NAME + "Using phenotype column '{}' in '{}' file." \
+                                      .format(self.pheno_name, self.pheno))
+
+                            else:
+                                print(std_ERROR_MAIN_PROCESS_NAME + "Given phenotype file ('{}') has bizarre number of columns. "
+                                                                    "Please check '--pheno' argument again." \
+                                      .format(_pheno))
+                                sys.exit()
+
+                else:
+                    print(std_ERROR_MAIN_PROCESS_NAME + "Phenotype file can't be found('{}'). Please check '--pheno' argument again." \
+                          .format(_pheno))
+
+
+            ##### Association Test #####
+            print(std_MAIN_PROCESS_NAME + "Performing Linear Regression.")
+
+            self.assoc_result = \
+                self.linear_regression(_out, self.vcf,
+                                         _covar=_covar, _covar_name=_covar_name,
+                                         _pheno=self.pheno, _pheno_name=self.pheno_name,
+                                         _condition=_condition, _condition_list=_condition_list,
+                                          _a1_allele=self.a1_allele)
 
 
         elif _MAIN_MENU == 'OMNIBUS':
@@ -607,6 +745,57 @@ class HLAassoc(object):
 
 
 
+    def linear_regression(self, _out, _vcf,
+                            _covar=None, _covar_name=None, _pheno=None, _pheno_name=None,
+                            _condition=None, _condition_list=None, _a1_allele=None, _ci=0.95):
+
+
+        command = [self.plink, '--vcf {}'.format(_vcf),
+                   '--allow-no-sex', '--ci {}'.format(_ci), '--out {}'.format(_out)]
+
+
+        # perform linear regression
+        command.extend(['--linear', 'hide-covar', 'beta'])
+
+        # a1_allele check
+        if bool(_a1_allele):
+            command.append('--a1-allele {}'.format(_a1_allele))
+
+        # Phenotype check
+        if bool(_pheno):
+            command.append('--pheno {}'.format(_pheno))
+
+            if bool(_pheno_name):
+                command.append('--pheno-name {}'.format(_pheno_name))
+
+        # Covariate check
+        if bool(_covar):
+            command.append('--covar {}'.format(_covar))
+
+            if bool(_covar_name):
+                command.append('--covar-name {}'.format(_covar_name))
+
+        # Condition check
+        if bool(_condition):
+            command.append('--condition {}'.format(_condition))
+        elif bool(_condition_list):
+            command.append('--condition-list {}'.format(_condition_list))
+
+
+        try:
+            # print(command)
+            subprocess.run(re.split(r'\s+', ' '.join(command)), check=True, stdout=DEVNULL, stderr=DEVNULL)
+        except CalledProcessError:
+            # Fail
+            print(std_ERROR_MAIN_PROCESS_NAME + "Association Test Failed.")
+            sys.exit()
+        else:
+            # Succeed
+
+            if exists(_out+'.nosex'):
+                os.system('rm {}'.format(_out+'.nosex'))
+
+            return _out+'.assoc.linear'
 
     def Omnibus_Test(self, _out, _pop, _bgl_phased, _fam, _bim, _pheno, _sex, _pcs,
                      _maf_threshold=0.005,
