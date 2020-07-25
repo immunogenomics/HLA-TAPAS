@@ -86,10 +86,10 @@ $ Rscript run_omnibus_test.R --file cohort --pop pop  \
 ``` -->
 
 ```
-$ python -m HLA_assoc OMNIBUS \
-    --file HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
-    --pop HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
-    --out MyOmnibus/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+$ python -m HLAassoc OMNIBUS \
+    --file HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
+    --pop HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --out Myassoc/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```
@@ -97,15 +97,15 @@ $ python -m HLA_assoc OMNIBUS \
 The above command is equivalent to the next command.
 
 ```
-$ python -m HLA_assoc OMNIBUS \
-    --phased HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bgl.phased \
-    --bim HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bim \
-    --fam HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.fam \
-    --pcs HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pcs \
-    --pheno HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pheno \
-    --sex HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.sex \
-    --pop HLA_assoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
-    --out MyOmnibus/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+$ python -m HLAassoc OMNIBUS \
+    --phased HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bgl.phased \
+    --bim HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bim \
+    --fam HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.fam \
+    --pcs HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pcs \
+    --pheno HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pheno \
+    --sex HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.sex \
+    --pop HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --out Myassoc/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```
@@ -121,12 +121,12 @@ Or, next minimal 3 files can be passed to perform the Omnibus Test.
 Phased BEAGLE file and Top 10 PCs will be generated from the given VCF file. PLINK fam file must contain Sex and Phenotype information. All samples will be considered to be originated from same population unless the '--pop' argument is given.
 
 ```
-$ python -m HLA_assoc OMNIBUS \
-    --vcf HLA_assoc/example/OMNIBUS/WTCCC+1000G_EUR_REF.IMPUTED.bgl.phased.vcf.gz \
-    --bim HLA_assoc/example/OMNIBUS/WTCCC+1000G_EUR_REF.REF.bglv4.bim \
-    --fam HLA_assoc/example/OMNIBUS/wtccc_filtered_58C_RA.hatk.300+300.chr6.hg18.fam \
-    --pheno HLA_assoc/example/OMNIBUS/wtccc_filtered_58C_RA.hatk.300+300.phe \
-    --out MyOmnibus_minimal/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+$ python -m HLAassoc OMNIBUS \
+    --vcf HLAassoc/example/OMNIBUS/WTCCC+1000G_EUR_REF.IMPUTED.bgl.phased.vcf.gz \
+    --bim HLAassoc/example/OMNIBUS/WTCCC+1000G_EUR_REF.REF.bglv4.bim \
+    --fam HLAassoc/example/OMNIBUS/wtccc_filtered_58C_RA.hatk.300+300.chr6.hg18.fam \
+    --pheno HLAassoc/example/OMNIBUS/wtccc_filtered_58C_RA.hatk.300+300.phe \
+    --out Myassoc/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```
@@ -134,12 +134,12 @@ $ python -m HLA_assoc OMNIBUS \
 <!-- <br>
 
 ```
-$ python -m HLA_assoc OMNIBUS \
-    --vcf HLA_assoc/example/OMNIBUS/1958BC+HM_CEU_REF.IMPUTED.bgl.phased.vcf.gz \
-    --bim HLA_assoc/example/OMNIBUS/1958BC+HM_CEU_REF.REF.bglv4.bim \
-    --fam HLA_assoc/example/OMNIBUS/1958BC.fam \
-    --pheno HLA_assoc/example/OMNIBUS/1958BC.phe \
-    --out MyOmnibus_minimal/1958BC+HM_CEU_REF.minimal_input.OMNIBUS \
+$ python -m HLAassoc OMNIBUS \
+    --vcf HLAassoc/example/OMNIBUS/1958BC+HM_CEU_REF.IMPUTED.bgl.phased.vcf.gz \
+    --bim HLAassoc/example/OMNIBUS/1958BC+HM_CEU_REF.REF.bglv4.bim \
+    --fam HLAassoc/example/OMNIBUS/1958BC.fam \
+    --pheno HLAassoc/example/OMNIBUS/1958BC.phe \
+    --out Myassoc/1958BC+HM_CEU_REF.minimal_input.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ``` -->
