@@ -1,12 +1,12 @@
 #-*- coding: utf-8 -*-
 
 import argparse, textwrap
-from Manhattan.manhattan import HATK_Manhattan
+from MyManhattan.manhattan import HATK_Manhattan
 
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='Manhattan',
+    parser = argparse.ArgumentParser(prog='MyManhattan',
                                      formatter_class=argparse.RawTextHelpFormatter,
                                      description=textwrap.dedent('''\
     #################################################################################################
@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--top-color", "-tc", help="\nTop signal point color(ex. \"#FF0000\").\n\n", default="#FF0000")
 
-    parser.add_argument("--point-size", "-ps", help="\nGeneral point size (default: 15).\n\n", default="15")
+    parser.add_argument("--point-size", "-ps"/, help="\nGeneral point size (default: 15).\n\n", default="15")
     parser.add_argument("--yaxis-unit", "-yau", help="\nY-axis value(-log10(x)) unit (default : 10).\n\n", default="10")
 
     parser.add_argument("--HLA", help="\nWhich HLA gene for Manhattan plot .\n\n",
