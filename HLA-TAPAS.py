@@ -7,8 +7,8 @@ import argparse, textwrap
 from NomenCleaner.NomenCleaner import HATK_NomenCleaner
 from MakeReference.MakeReference_v2 import MakeReference_v2
 from SNP2HLA.SNP2HLA import SNP2HLA
-from HLAassoc.HLA_assoc import HLAassoc
-from Manhattan.manhattan import Manhattan
+from HLAassoc.HLAassoc import HLAassoc
+from HLAManhattan.HLAmanhattan import HLAManhattan
 
 # Patterns to use
 p_Ggroup_HLA_allele = re.compile(r'^(\w+\*)?\d{2,3}(:\d{2,3})+G$')
