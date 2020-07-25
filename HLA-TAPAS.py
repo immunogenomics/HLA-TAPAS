@@ -177,7 +177,7 @@ def HLA_TAPAS(_target, _reference, _hg, _out, _hped, _chped=None,
     ### [5] Manhattan Plot
     print(std_MAIN_PROCESS_NAME + "Plotting Manhattan Plot.")
 
-    MANHATTAN_PLOT = Manhattan([LOGISTIC_RESULT], LOGISTIC_RESULT+'.manhattan', _hg)
+    MANHATTAN_PLOT = HLAManhattan([LOGISTIC_RESULT], LOGISTIC_RESULT+'.manhattan', _hg)
     print(std_MAIN_PROCESS_NAME + "Manhattan plot result : '{}'.\n\n".format(MANHATTAN_PLOT))
 
 
