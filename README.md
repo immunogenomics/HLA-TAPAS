@@ -121,7 +121,7 @@ $ python -m SNP2HLA \
     --mem 4g
 ```
 
-### (4) HLAassoc ([HLAassoc](./HLAassoc))
+### (4) HLA associaiton and fine-mapping studies ([HLAassoc](./HLAassoc))
 **HLAassoc** tapa focuses on performing HLA-focused association test using output after performing HLA imputation (using [SNP2HLA](./SNP2HLA) or other softwares). It consists of two types of association - **single marker** based association test to perform either a **(4-1)** LOGISITIC or a  **(4-2)** LINEAR regression using the [PLINK](https://www.cog-genomics.org/plink/1.9/assoc); and **(4-3)** a joint **haplotype-based** association analysis at the amino acid level.
 
 Please refer the the ([HLAassoc](./HLAassoc)) tapa for more details. Examples are given below:
@@ -158,7 +158,7 @@ $ python -m HLAassoc OMNIBUS \
     --maf-threshold 0
 ```
 
-### (5) [HLAManhattan](./HLAManhattan)
+### (5) Plot (step-wise) association results [HLAManhattan](./HLAManhattan)
 This tapa plots reuslts from the single-marker  HLA fine-mapping studies
 ```
 $ python -m HLAManhattan \
