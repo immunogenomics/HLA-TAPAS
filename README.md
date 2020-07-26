@@ -158,7 +158,7 @@ $ python -m HLAassoc OMNIBUS \
     --maf-threshold 0
 ```
 
-### (5) Plot (step-wise) association results [HLAManhattan](./HLAManhattan)
+### (5) Plot (step-wise) association results ([HLAManhattan](./HLAManhattan))
 This tapa plots reuslts from the single-marker  HLA fine-mapping studies
 ```
 $ python -m HLAManhattan \
