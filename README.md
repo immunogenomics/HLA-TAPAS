@@ -162,7 +162,7 @@ $ python -m HLAassoc OMNIBUS \
 This tapa plots reuslts from the single-marker  HLA fine-mapping studies
 ```
 $ python -m HLAManhattan \
-    --assoc-result Manhattan/example/1958BC+HM_CEU_REF.IMPUTED.assoc.logistic \
+    --assoc-result HLAManhattan/example/1958BC+HM_CEU_REF.IMPUTED.assoc.logistic \
     --hg 18 \
     --out MyManhattan/1958BC+HM_CEU_REF.IMPUTED
 ```

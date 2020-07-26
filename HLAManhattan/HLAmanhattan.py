@@ -116,7 +116,7 @@ def HLAManhattan(_assoc_result, _out, _hg, _topcol="#FF0000", _min_pos="29.60E6"
     l_yaxis = []
 
 
-    if _assoc_result[0].endswith('.assoc.logistic'):
+    if _assoc_result[0].endswith('.assoc.logistic') or _assoc_result[0].endswith('.assoc.linear'):
 
         ##### *.assoc.logistic(PLINK) #####
 
