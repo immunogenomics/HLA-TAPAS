@@ -146,30 +146,30 @@ class HLAassoc(object):
 
 
             ## Reverse-map HLA marker label.
-            if bool(_hped) and bool(_chped):
-
-                if exists(_hped) and exists(_chped):
-                    self.vcf = reverse_map(self.vcf,
-                                           join(self.out_dirname, basename(_out).rstrip('.vcf.gz') + '.rev_mapped.vcf.gz'),
-                                           _hped, _chped)
-                    # print(self.vcf)
-
-                else:
-                    if not exists(_hped):
-                        print(std_WARNING_MAIN_PROCESS_NAME + "HPED file can't be found('{}'). Please check '--hped' argument again.\n"
-                                                              "Skipping Reverse-mapping of HLA marker labels.".format(_hped))
-                    if not exists(_chped):
-                        print(std_WARNING_MAIN_PROCESS_NAME + "CHPED file can't be found('{}'). Please check '--chped' argument again.\n"
-                                                              "Skipping Reverse-mapping of HLA marker labels.".format(_chped))
-
-
-            # elif bool(_hat):
-            #     # if not exists(_hat):
-            #     #     print(std_WARNING_MAIN_PROCESS_NAME + "HAT file can't be found('{}'). Please check '--hped' argument again.\n"
-            #     #                                           "Skipping Reverse-mapping of HLA marker labels.".format(_hat))
+            # if bool(_hped) and bool(_chped):
             #
-            #     # Not yet.
-            #     pass
+            #     if exists(_hped) and exists(_chped):
+            #         self.vcf = reverse_map(self.vcf,
+            #                                join(self.out_dirname, basename(_out).rstrip('.vcf.gz') + '.rev_mapped.vcf.gz'),
+            #                                _hped, _chped)
+            #         # print(self.vcf)
+            #
+            #     else:
+            #         if not exists(_hped):
+            #             print(std_WARNING_MAIN_PROCESS_NAME + "HPED file can't be found('{}'). Please check '--hped' argument again.\n"
+            #                                                   "Skipping Reverse-mapping of HLA marker labels.".format(_hped))
+            #         if not exists(_chped):
+            #             print(std_WARNING_MAIN_PROCESS_NAME + "CHPED file can't be found('{}'). Please check '--chped' argument again.\n"
+            #                                                   "Skipping Reverse-mapping of HLA marker labels.".format(_chped))
+            #
+            #
+            # # elif bool(_hat):
+            # #     # if not exists(_hat):
+            # #     #     print(std_WARNING_MAIN_PROCESS_NAME + "HAT file can't be found('{}'). Please check '--hped' argument again.\n"
+            # #     #                                           "Skipping Reverse-mapping of HLA marker labels.".format(_hat))
+            # #
+            # #     # Not yet.
+            # #     pass
 
 
 
@@ -317,21 +317,21 @@ class HLAassoc(object):
 
 
             ## Reverse-map HLA marker label.
-            if bool(_hped) and bool(_chped):
-
-                if exists(_hped) and exists(_chped):
-                    self.vcf = reverse_map(self.vcf,
-                                           join(self.out_dirname, basename(_out).rstrip('.vcf.gz') + '.rev_mapped.vcf.gz'),
-                                           _hped, _chped)
-                    # print(self.vcf)
-
-                else:
-                    if not exists(_hped):
-                        print(std_WARNING_MAIN_PROCESS_NAME + "HPED file can't be found('{}'). Please check '--hped' argument again.\n"
-                                                              "Skipping Reverse-mapping of HLA marker labels.".format(_hped))
-                    if not exists(_chped):
-                        print(std_WARNING_MAIN_PROCESS_NAME + "CHPED file can't be found('{}'). Please check '--chped' argument again.\n"
-                                                              "Skipping Reverse-mapping of HLA marker labels.".format(_chped))
+            # if bool(_hped) and bool(_chped):
+            #
+            #     if exists(_hped) and exists(_chped):
+            #         self.vcf = reverse_map(self.vcf,
+            #                                join(self.out_dirname, basename(_out).rstrip('.vcf.gz') + '.rev_mapped.vcf.gz'),
+            #                                _hped, _chped)
+            #         # print(self.vcf)
+            #
+            #     else:
+            #         if not exists(_hped):
+            #             print(std_WARNING_MAIN_PROCESS_NAME + "HPED file can't be found('{}'). Please check '--hped' argument again.\n"
+            #                                                   "Skipping Reverse-mapping of HLA marker labels.".format(_hped))
+            #         if not exists(_chped):
+            #             print(std_WARNING_MAIN_PROCESS_NAME + "CHPED file can't be found('{}'). Please check '--chped' argument again.\n"
+            #                                                   "Skipping Reverse-mapping of HLA marker labels.".format(_chped))
 
 
             ## Phenotype file check
