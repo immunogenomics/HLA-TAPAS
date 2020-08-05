@@ -25,8 +25,8 @@ def HLA_TAPAS(_target, _reference, _hg, _out, _hped, _chped=None,
               b_mem = '2g', b_nthreads=1, b_niterations=5,
               _hat='NomenCleaner/data/HLA_ALLELE_TABLE.imgt3320.hat',
               f_oneF=False, f_twoF=False, f_threeF=False, f_fourF=False, f_Ggroup=False, f_Pgroup=False, f_NoCaption=False,
-              _dict_AA='MakeReference/data/HLA_DICTIONARY_AA.hg19.imgt3320',
-              _dict_SNPS='MakeReference/data/HLA_DICTIONARY_SNPS.hg19.imgt3320', _tolerated_diff=0.15,
+              _dict_AA='MakeReference/data/HLA_DICTIONARY_AA.hg19.imgt3320.Ggroup',
+              _dict_SNPS='MakeReference/data/HLA_DICTIONARY_SNPS.hg19.imgt3320.Ggroup', _tolerated_diff=0.15,
               _pheno=None, _pheno_name=None, _condition=None, _condition_list=None,
               _reference_bim=None, _covar=None, _covar_name=None,
               _pop=None, _sex=None, _pcs=None, _maf_threshold=None, f_aa_only=False,
@@ -84,14 +84,14 @@ def HLA_TAPAS(_target, _reference, _hg, _out, _hped, _chped=None,
 
     # Dictionary
     if _hg == '18':
-        _dict_AA = 'MakeReference/data/hg18/HLA_DICTIONARY_AA.hg18.imgt3320'
-        _dict_SNPS = 'MakeReference/data/hg18/HLA_DICTIONARY_SNPS.hg18.imgt3320'
+        _dict_AA = 'MakeReference/data/hg18/HLA_DICTIONARY_AA.hg18.imgt3320.Ggroup'
+        _dict_SNPS = 'MakeReference/data/hg18/HLA_DICTIONARY_SNPS.hg18.imgt3320.Ggroup'
     elif _hg == '19':
-        _dict_AA = 'MakeReference/data/hg19/HLA_DICTIONARY_AA.hg19.imgt3320'
-        _dict_SNPS = 'MakeReference/data/hg19/HLA_DICTIONARY_SNPS.hg19.imgt3320'
+        _dict_AA = 'MakeReference/data/hg19/HLA_DICTIONARY_AA.hg19.imgt3320.Ggroup'
+        _dict_SNPS = 'MakeReference/data/hg19/HLA_DICTIONARY_SNPS.hg19.imgt3320.Ggroup'
     elif _hg == '38':
-        _dict_AA = 'MakeReference/data/hg38/HLA_DICTIONARY_AA.hg38.imgt3320'
-        _dict_SNPS = 'MakeReference/data/hg38/HLA_DICTIONARY_SNPS.hg38.imgt3320'
+        _dict_AA = 'MakeReference/data/hg38/HLA_DICTIONARY_AA.hg38.imgt3320.Ggroup'
+        _dict_SNPS = 'MakeReference/data/hg38/HLA_DICTIONARY_SNPS.hg38.imgt3320.Ggroup'
     else:
         print(std_ERROR_MAIN_PROCESS_NAME + "Bizarre Human Genome version is given. Please check '--hg' argument again.")
         sys.exit()
@@ -114,11 +114,11 @@ def HLA_TAPAS(_target, _reference, _hg, _out, _hped, _chped=None,
     if CheckGgroupHPED(_hped) == -1:
         sys.exit()
 
-    print(std_MAIN_PROCESS_NAME + "Generating 6-digit(maximum 4field) CHPED with given HPED('{}')." \
+    print(std_MAIN_PROCESS_NAME + "Generating G-group CHPED with given HPED('{}')." \
           .format(_hped))
 
-    CHPED = HATK_NomenCleaner(_hped, _hat, _out+'.4field', __f_NoCaption=False, __leave_NotFound=True,
-                              __oneF=False, __twoF=False, __threeF=False, __fourF=True, __Ggroup=False, __Pgroup=False)
+    CHPED = HATK_NomenCleaner(_hped, _hat, _out+'.Ggroup', __f_NoCaption=False, __leave_NotFound=True,
+                              __oneF=False, __twoF=False, __threeF=False, __fourF=False, __Ggroup=True, __Pgroup=False)
     # '--leave-NotFound' as True by default as Yang had requested.
 
     CHPED = CHPED.chped
