@@ -87,9 +87,9 @@ $ Rscript run_omnibus_test.R --file cohort --pop pop  \
 
 ```
 $ python -m HLAassoc OMNIBUS \
-    --file HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
-    --pop HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
-    --out Myassoc/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+    --file HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
+    --pop HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```
@@ -98,14 +98,14 @@ The above command is equivalent to the next command.
 
 ```
 $ python -m HLAassoc OMNIBUS \
-    --phased HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bgl.phased \
-    --bim HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bim \
-    --fam HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.fam \
-    --pcs HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pcs \
-    --pheno HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pheno \
-    --sex HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.sex \
-    --pop HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
-    --out Myassoc/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+    --phased HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bgl.phased \
+    --bim HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bim \
+    --fam HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.fam \
+    --pcs HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pcs \
+    --pheno HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pheno \
+    --sex HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.sex \
+    --pop HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```
@@ -122,11 +122,11 @@ Phased BEAGLE file and Top 10 PCs will be generated from the given VCF file. PLI
 
 ```
 $ python -m HLAassoc OMNIBUS \
-    --vcf HLAassoc/example/OMNIBUS/WTCCC+1000G_EUR_REF.IMPUTED.bgl.phased.vcf.gz \
-    --bim HLAassoc/example/OMNIBUS/WTCCC+1000G_EUR_REF.REF.bglv4.bim \
-    --fam HLAassoc/example/OMNIBUS/wtccc_filtered_58C_RA.hatk.300+300.chr6.hg18.fam \
-    --pheno HLAassoc/example/OMNIBUS/wtccc_filtered_58C_RA.hatk.300+300.phe \
-    --out Myassoc/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+    --vcf HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.bgl.phased.vcf.gz \
+    --bim HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.REF.bglv4.bim \
+    --fam HLAassoc/example/OMNIBUS/Case+Control.300+300.chr6.hg18.fam \
+    --pheno HLAassoc/example/OMNIBUS/Case+Control.300+300.phe \
+    --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```

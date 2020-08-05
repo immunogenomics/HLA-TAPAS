@@ -60,12 +60,12 @@ Main usage example of HLA-TAPAS is as below.
 
 ```
 $ python HLA-TAPAS.py \
-    --target example/wtccc_filtered_58C_RA.hatk.300+300.chr6.hg18 \
+    --target example/Case+Control.300+300.chr6.hg18 \
     --reference example/1000G.EUR.chr6.hg18.28mb-35mb \
     --hped-Ggroup example/1000G.EUR.Ggroup.hped \
-    --pheno example/wtccc_filtered_58C_RA.hatk.300+300.phe \
+    --pheno example/Case+Control.300+300.phe \
     --hg 18 \
-    --out MyHLA-TAPAS/WTCCC+1000G_EUR_REF \
+    --out MyHLA-TAPAS/Case+Control+1000G_EUR_REF \
 #   --mem 4g \
 #   --nthreads 4
 ```
@@ -151,9 +151,9 @@ python -m HLAassoc LINEAR \
 #### (4-3) Omnibus test
 ```
 $ python -m HLAassoc OMNIBUS \
-    --file HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
-    --pop HLAassoc/example/OMNIBUS/WTCCC_RA+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
-    --out Myassoc/WTCCC_RA+1000G_EUR_REF.OMNIBUS \
+    --file HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
+    --pop HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```
