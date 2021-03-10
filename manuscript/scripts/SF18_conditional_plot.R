@@ -46,12 +46,22 @@ make.fancy.locus.plot.bare(chr = "6",locus=locus %>% filter(locus$SNP %in% frq[f
                            p.color.Variant = "#999999", p.color.AA = "#CF3721", p.color.HLA = "darkblue", p.color.SNP = "#999999")
 
 locus <- TRIM_LOGISTIC.ASSOC2("../data/all.allB.assoc.linear",bim=bim)
-omnibus <- TRIM_OMNI.ASSOC("../data/all.allB.txt")
+omnibus <- TRIM_OMNI.ASSOC("../data/all.allB.txt.gz")
 make.fancy.locus.plot.bare(chr = "6",locus=locus, omnibus = omnibus,
                            title = "(e) control for all amino acid positions in HLA-B",min.pos = min.pos,max.pos = max.pos, yrange=20,
                            "",yax = NULL, cex = cex, topcex = topcex,aa.wiggle = -3e5,
                            p.color.Variant = "#999999", p.color.AA = "#CF3721", p.color.HLA = "darkblue", p.color.SNP = "#999999")
 
 
+make.fancy.locus.plot.bottom("6", min.pos, max.pos, pathToTheGeneBuild="~/GitHub/yang/HLA-TAPAS/Manhattan/data/known_genes/known_genes_chr6.hg19.txt")
+dev.off()
+
+ png(paste0(out, ".png"), width=24, height=16,res=200,unit="in") 
+ layout(matrix(1:(NumberofLogistic+1), (NumberofLogistic+1),1, byrow=TRUE), heights=c(6, 2))
+make.fancy.locus.plot.bare(chr = "6",locus=locus, omnibus = omnibus,
+ title = "",min.pos = min.pos,max.pos = max.pos, yrange=200,
+                "",yax = NULL, cex = cex, topcex = topcex, hla.wiggle = 4e5, snp.wiggle = -5e5,
+ p.color.Variant = "#999999", p.color.AA = "#CF3721", p.color.HLA = "darkblue", p.color.SNP = "#999999")
+ 
 make.fancy.locus.plot.bottom("6", min.pos, max.pos, pathToTheGeneBuild="~/GitHub/yang/HLA-TAPAS/Manhattan/data/known_genes/known_genes_chr6.hg19.txt")
 dev.off()
