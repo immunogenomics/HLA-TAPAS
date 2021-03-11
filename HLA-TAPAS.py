@@ -7,7 +7,7 @@ import argparse, textwrap
 from NomenCleaner.NomenCleaner import HATK_NomenCleaner
 from MakeReference.MakeReference_v2 import MakeReference_v2
 from SNP2HLA.SNP2HLA import SNP2HLA
-from HLAassoc.HLAassoc import HLAassoc
+from HLA_assoc.HLA_assoc import HLA_assoc
 from Manhattan.manhattan import Manhattan
 
 # Patterns to use
