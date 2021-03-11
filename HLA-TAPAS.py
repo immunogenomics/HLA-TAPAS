@@ -7,8 +7,8 @@ import argparse, textwrap
 from NomenCleaner.NomenCleaner import HATK_NomenCleaner
 from MakeReference.MakeReference_v2 import MakeReference_v2
 from SNP2HLA.SNP2HLA import SNP2HLA
-from HLA_assoc.HLA_assoc import HLA_assoc
-from Manhattan.manhattan import Manhattan
+from HLAassoc.HLAassoc import HLAassoc
+from HLAManhattan.HLAmanhattan import HLAManhattan
 
 # Patterns to use
 p_Ggroup_HLA_allele = re.compile(r'^(\w+\*)?\d{2,3}(:\d{2,3})+G$')
@@ -177,7 +177,7 @@ def HLA_TAPAS(_target, _reference, _hg, _out, _hped, _chped=None,
     ### [5] Manhattan Plot
     print(std_MAIN_PROCESS_NAME + "Plotting Manhattan Plot.")
 
-    MANHATTAN_PLOT = Manhattan([LOGISTIC_RESULT], LOGISTIC_RESULT+'.manhattan', _hg)
+    MANHATTAN_PLOT = HLAManhattan([LOGISTIC_RESULT], LOGISTIC_RESULT+'.manhattan', _hg)
     print(std_MAIN_PROCESS_NAME + "Manhattan plot result : '{}'.\n\n".format(MANHATTAN_PLOT))
 
 

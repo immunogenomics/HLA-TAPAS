@@ -53,7 +53,7 @@ class HATK_Manhattan():
                 sys.exit()
 
 
-        self.result = Manhattan(_assoc_result, _out, _hg, _topcol=kwargs['_top_color'],
+        self.result = HLAManhattan(_assoc_result, _out, _hg, _topcol=kwargs['_top_color'],
                                 _pointsize=kwargs['_point_size'], _yaxis_unit=kwargs['_yaxis_unit'], _HLA=kwargs['_HLA'])
 
 
@@ -70,9 +70,9 @@ class HATK_Manhattan():
 
 
 
-def Manhattan(_assoc_result, _out, _hg, _topcol="#FF0000", _min_pos="29.60E6", _max_pos="33.2E6",
+def HLAManhattan(_assoc_result, _out, _hg, _topcol="#FF0000", _min_pos="29.60E6", _max_pos="33.2E6",
               _pointsize="15", _yaxis_unit="10", _p_Rscript=which("Rscript"), _HLA=None,
-              _p_src='Manhattan/src', _p_data='Manhattan/data'):
+              _p_src='HLAManhattan/src', _p_data='HLAManhattan/data'):
 
 
 
@@ -116,7 +116,7 @@ def Manhattan(_assoc_result, _out, _hg, _topcol="#FF0000", _min_pos="29.60E6", _
     l_yaxis = []
 
 
-    if _assoc_result[0].endswith('.assoc.logistic'):
+    if _assoc_result[0].endswith('.assoc.logistic') or _assoc_result[0].endswith('.assoc.linear'):
 
         ##### *.assoc.logistic(PLINK) #####
 

@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 
 """
-HLA_assoc
+HLAassoc
 
 - Functions for Association test.
 

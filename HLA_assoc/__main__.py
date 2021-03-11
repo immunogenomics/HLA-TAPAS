@@ -4,25 +4,25 @@
 #import os, sys, re
 import argparse, textwrap
 
-from HLA_assoc.HLA_assoc import HLA_assoc
+from HLAassoc.HLAassoc import HLAassoc
 
 
 
 if __name__ == "__main__":
 
 
-    parser = argparse.ArgumentParser(prog='HLA_assoc',
+    parser = argparse.ArgumentParser(prog='HLAassoc',
                                      add_help=False,
                                      formatter_class=argparse.RawTextHelpFormatter,
                                      description=textwrap.dedent('''\
     #################################################################################################
 
-        HLA-assoc
+        HLAassoc
 
         Supervisor : WansonChoi
         E-mail : wansonchoi@snu.ac.kr
 
-        Description here...
+        Perform single marker logistic/linear regression using PLINK.
 
     #################################################################################################
                                      '''))
@@ -81,6 +81,48 @@ if __name__ == "__main__":
     subp1.add_argument("--hat", help="\nHLA Allele Table file(*.hat).\n\n")
 
 
+
+    ### subparser 3 : Linear Regression for continuous trait
+    subp3 = subparsers.add_parser('LINEAR',
+                                  help='Linear Regression',
+                                  add_help=False,
+                                  formatter_class=argparse.RawTextHelpFormatter,
+                                  description=textwrap.dedent('''\
+    #################################################################################################
+    
+        Performing Linear Regression using PLINK
+        
+        
+    #################################################################################################
+    '''))
+
+    subp3._optionals.title = "OPTIONS"
+
+    subp3.add_argument("--help", "-h", help="\nShow this help message and exit.\n\n", action='help')
+
+    subp3.add_argument("--vcf", help="\nIMPUTED or PHASED vcf file to perform logistic regression. (*.vcf(.gz))\n\n", required=True)
+    subp3.add_argument("--out", "-o", help="\nOutput file name.\n\n", required=True)
+    subp3.add_argument("--reference-bim", help="\nReference bim file to decode ATtrick.\n\n")
+    subp3.add_argument("--dependency", help="\nSpecify a folder for external software.\n\n", default='dependency/')
+
+    subp3.add_argument("--covar", help="\nSpecify .covar file (Plink v1.9).\n\n")
+    subp3.add_argument("--covar-name", help="\nSpecify the column name(s) in .covar file which you will use. (Plink v1.9)\n\n")
+
+    subp3.add_argument("--pheno", help="\nSpecify phenotype information file (Plink v1.9).\n\n")
+    subp3.add_argument("--pheno-name", help="\nSpecify the column name in phenotype file which you will use. (Plink v1.9)\n\n")
+
+    CondVars = subp3.add_mutually_exclusive_group()
+    CondVars.add_argument("--condition", help="\nSpecify a single variant ID to condition(i.e. To set it as covariate). (Plink v1.9)\n\n")
+    CondVars.add_argument("--condition-list", help="\nSpecify a tsv file of multiple variant IDs to condition(i.e. To set it as covariates). (Plink v1.9)\n\n")
+
+
+    # Reverse-map if want to reverse back to a certain resolution, e.g. G-group
+    subp3.add_argument("--hped", help="\nHLA Type Data not yet processed by \'NomenCleaner\'.\n\n")
+    subp3.add_argument("--chped", help="\nHLA Type Data processed by \'NomenCleaner\' (*.chped)\n\n")
+    subp3.add_argument("--hat", help="\nHLA Allele Table file(*.hat).\n\n")
+
+
+
     ### subparser 2 : Omnibus Test
     subp2 = subparsers.add_parser('OMNIBUS',
                                   help='Omnibus Test',
@@ -91,10 +133,10 @@ if __name__ == "__main__":
 
         Omnibus Test
 
-        Author : Yang Luo
-        E-mail : yangluo@broadinstitute.org
+        Author : Masahiro Kanai; Yang Luo
+        E-mail : mkanai@broadinstitute.org ; yangluo@broadinstitute.org
 
-        Description here...
+        Performing Omnibus test on the haplotype-level formed by amino acid positions
 
     #################################################################################################
     '''))
@@ -168,14 +210,21 @@ if __name__ == "__main__":
     # Main implementation
 
     if args.Main_Menu == 'LOGISTIC':
-        HLA_assoc(args.Main_Menu, args.out, args.dependency,
+        HLAassoc(args.Main_Menu, args.out, args.dependency,
+                  _vcf=args.vcf, _reference_bim=args.reference_bim,
+                  _covar=args.covar, _covar_name=args.covar_name, _pheno=args.pheno, _pheno_name=args.pheno_name,
+                  _condition=args.condition, _condition_list=args.condition_list,
+                  _hped=args.hped, _chped=args.chped, _hat=args.hat)
+
+    if args.Main_Menu == 'LINEAR':
+        HLAassoc(args.Main_Menu, args.out, args.dependency,
                   _vcf=args.vcf, _reference_bim=args.reference_bim,
                   _covar=args.covar, _covar_name=args.covar_name, _pheno=args.pheno, _pheno_name=args.pheno_name,
                   _condition=args.condition, _condition_list=args.condition_list,
                   _hped=args.hped, _chped=args.chped, _hat=args.hat)
 
     elif args.Main_Menu == 'OMNIBUS':
-        HLA_assoc(args.Main_Menu, args.out, args.dependency,
+        HLAassoc(args.Main_Menu, args.out, args.dependency,
                   _vcf=args.vcf, _file=args.file, _pop=args.pop, _phased=args.phased, _fam=args.fam, _bim=args.bim,
                   _pheno=args.pheno, _sex=args.sex, _pcs=args.pcs, _maf_threshold=args.maf_threshold,
                   f_aa_only=args.aa_only, _nthreads=args.nthreads, f_remove_samples_by_haplo=args.remove_samples_by_haplo,

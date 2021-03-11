@@ -1,12 +1,12 @@
 #-*- coding: utf-8 -*-
 
 import argparse, textwrap
-from Manhattan.manhattan import HATK_Manhattan
+from HLAManhattan.HLAmanhattan import HATK_Manhattan
 
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='Manhattan',
+    parser = argparse.ArgumentParser(prog='HLAManhattan',
                                      formatter_class=argparse.RawTextHelpFormatter,
                                      description=textwrap.dedent('''\
     #################################################################################################
