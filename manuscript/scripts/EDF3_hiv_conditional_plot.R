@@ -8,7 +8,7 @@ max.pos <- 34e6
 cex <- 3
 topcex <- 4
 
-out <- "../figs/SF18_all_conditional"
+out <- "../figs/EDF3_HIV_conditional"
 #pdf(paste0(out, ".pdf"), width=16, height=16) 
 png(paste0(out, ".png"), width=18, height=20,res=200,unit="in")
 
