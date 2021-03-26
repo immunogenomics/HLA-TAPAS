@@ -170,6 +170,19 @@ $ python -m HLAManhattan \
 <br>
 <br>
 
+# Support
+Before contacting us or leaving an issue, please try the following:
+
+1. Each tapa has its own working examples ([`NomenCleaner`](https://github.com/immunogenomics/HLA-TAPAS/tree/master/NomenCleaner); [`MakeReference`](https://github.com/immunogenomics/HLA-TAPAS/tree/master/MakeReference);[`SNP2HLA`](https://github.com/immunogenomics/HLA-TAPAS/tree/master/SNP2HLA); and [`HLAassoc`](https://github.com/immunogenomics/HLA-TAPAS/tree/master/HLAassoc)).
+2. Common issues and questions are descirbed in the wiki [FAQ](https://github.com/immunogenomics/HLA-TAPAS/wiki/HLA-TAPAS-FAQ).
+3. The methods and applicationsare described in the paper (citation below).
+
+If you still have questions, please leave an [issue](https://github.com/immunogenomics/HLA-TAPAS/issues), or contact us at snp2hla AT broadinstitute DOT org
+
+# Reference 
+Please cite this manuscript if you would like to include imputed results from the panel in your work:
+
+Luo, Y., Kanai, M., Choi, W., Li, X., Yamamoto, K., Ogawa, K., Gutierrez-Arcelus, M., Gregersen, P. K., Stuart, P. E., Elder, J. T., Fellay, J., Carrington, M., Haas, D. W., Guo, X., Palmer, N. D., Chen, Y.-D. I., Rotter, J. I., Taylor, K. D., Rich, S., … Raychaudhuri, S. (2020). A high-resolution HLA reference panel capturing global population diversity enables multi-ethnic fine-mapping in HIV host response. https://doi.org/10.1101/2020.07.16.20155606
 
 <!-- 
 ## Development Log
