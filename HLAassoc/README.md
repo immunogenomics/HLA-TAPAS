@@ -52,7 +52,7 @@ $ python -m HLAassoc LOGISTIC \
 Similar to the logisitc regression, here's how linear regression works:
 
 ```
-$ python -m HLAassoc LOGISTIC \
+$ python -m HLAassoc LINEAR \
     --vcf HLAassoc/example/IMPUTED.1958BC.bgl.phased.vcf.gz \
     --out Myassoc/IMPUTED.1958BC \
     --pheno HLAassoc/example/1958BC.phe \
