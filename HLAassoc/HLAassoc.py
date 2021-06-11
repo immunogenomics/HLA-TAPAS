@@ -693,7 +693,7 @@ class HLAassoc(object):
                             f_asBETA=False, _ci=0.95):
 
 
-        command = [self.plink, '--vcf {}'.format(_vcf),
+        command = [self.plink, '--vcf {}'.format(_vcf), '--const-fid',
                    '--allow-no-sex', '--ci {}'.format(_ci), '--out {}'.format(_out)]
 
 
