@@ -693,7 +693,7 @@ class HLAassoc(object):
                             f_asBETA=False, _ci=0.95):
 
 
-        command = [self.plink, '--vcf {}'.format(_vcf), '--const-fid',
+        command = [self.plink, '--vcf {}'.format(_vcf), '--double-id',
                    '--allow-no-sex', '--ci {}'.format(_ci), '--out {}'.format(_out)]
 
 
@@ -750,7 +750,7 @@ class HLAassoc(object):
                             _condition=None, _condition_list=None, _a1_allele=None, _ci=0.95):
 
 
-        command = [self.plink, '--vcf {}'.format(_vcf),"--const-fid",
+        command = [self.plink, '--vcf {}'.format(_vcf),"--double-id",
                    '--allow-no-sex', '--ci {}'.format(_ci), '--out {}'.format(_out)]
 
 
