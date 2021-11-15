@@ -9,9 +9,12 @@ Briefly, major updates include
 
 (3) including custom R scripts for performing association and fine-mapping analysis in multiple ancestries. 
 
-Please cite [this paper](https://www.medrxiv.org/content/10.1101/2020.07.16.20155606v1) if you choose to use this work.
-
 <img src="./resources/HLA-TAPAS-pipeline.png">
+
+## Citation
+Please cite [the following paper](https://www.nature.com/articles/s41588-021-00935-7) if you choose to use this work.
+
+Luo, Y., Kanai, M., Choi, W. et al. A high-resolution HLA reference panel capturing global population diversity enables multi-ancestry fine-mapping in HIV host response. Nat Genet 53, 1504–1516 (2021). https://doi.org/10.1038/s41588-021-00935-7
 
 
 ## Requirments & Dependencies
@@ -178,11 +181,6 @@ Before contacting us or leaving an issue, please try the following:
 3. The methods and applicationsare described in the paper (citation below).
 
 If you still have questions, please leave an [issue](https://github.com/immunogenomics/HLA-TAPAS/issues), or contact us at snp2hla AT broadinstitute DOT org
-
-# Reference 
-Please cite this manuscript if you would like to include imputed results from the panel in your work:
-
-Luo, Y., Kanai, M., Choi, W., Li, X., Yamamoto, K., Ogawa, K., Gutierrez-Arcelus, M., Gregersen, P. K., Stuart, P. E., Elder, J. T., Fellay, J., Carrington, M., Haas, D. W., Guo, X., Palmer, N. D., Chen, Y.-D. I., Rotter, J. I., Taylor, K. D., Rich, S., … Raychaudhuri, S. (2020). A high-resolution HLA reference panel capturing global population diversity enables multi-ethnic fine-mapping in HIV host response. https://doi.org/10.1101/2020.07.16.20155606
 
 <!-- 
 ## Development Log
