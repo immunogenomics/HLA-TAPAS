@@ -733,7 +733,7 @@ class HLAassoc(object):
             subprocess.run(re.split(r'\s+', ' '.join(command)), check=True, stdout=DEVNULL, stderr=DEVNULL)
         except CalledProcessError:
             # Fail
-            print(std_ERROR_MAIN_PROCESS_NAME + "Association Test Failed.")
+            print(std_ERROR_MAIN_PROCESS_NAME + "Association Test Failed. Check plink log file for more details")
             sys.exit()
         else:
             # Succeed
@@ -750,7 +750,7 @@ class HLAassoc(object):
                             _condition=None, _condition_list=None, _a1_allele=None, _ci=0.95):
 
 
-        command = [self.plink, '--vcf {}'.format(_vcf),
+        command = [self.plink, '--vcf {}'.format(_vcf),"--const-fid",
                    '--allow-no-sex', '--ci {}'.format(_ci), '--out {}'.format(_out)]
 
 
