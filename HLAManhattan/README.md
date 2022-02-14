@@ -3,7 +3,7 @@
 ## (1) Introduction
 This tapa provides basic functions for a HLA-focused Manhattan plot. This module is adapted from [HATK](https://github.com/WansonChoi/HATK). The script searches for all association results in a directory (e.g. *.assoc or *.logistic.assoc) and plot all association results in a single figure (see below)
 
-<img src="../manuscript/figs/SF18_all_conditional.png">
+<img src="../resources/all_conditional.png">
 
 <br>
 <br>
