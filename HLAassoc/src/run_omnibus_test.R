@@ -11,7 +11,7 @@ library(rcompanion)
 options(datatable.fread.datatable = FALSE)
 options(stringsAsFactors = FALSE)
 
-read_data <- function(pop, phased_fname, fam_fname, bim_fname, pheno_fname, sex_fname, pcs_fname = NULL) {
+read_data <- function(phased_fname, fam_fname, pheno_fname, covs_fname = NULL) {
   x <- fread(phased_fname, header = FALSE)
   phased <- x[6:nrow(x), 2:ncol(x)]
   colnames(phased) <- c("SNP", x[2, 3:ncol(x)])
@@ -22,30 +22,31 @@ read_data <- function(pop, phased_fname, fam_fname, bim_fname, pheno_fname, sex_
   colnames(pheno) <- c("FID", "IID", "PHENO")
   pheno <- subset(pheno, IID %in% fam$IID)
 
-  sex <- read.table(sex_fname, as.is = T, na.strings = c("0", "-9"))
-  colnames(sex) <- c("FID", "IID", "SEX")
-  sex <- subset(sex, IID %in% fam$IID)
+  #sex <- read.table(sex_fname, as.is = T, na.strings = c("0", "-9"))
+  #colnames(sex) <- c("FID", "IID", "SEX")
+  #sex <- subset(sex, IID %in% fam$IID)
 
-  if (!is.null(pcs_fname) & file.exists(pcs_fname)) {
-    pcs <- read.table(pcs_fname, T, as.is = T)
-    pcs <- subset(pcs, IID %in% fam$IID)
+  if (!is.null(covs_fname) & file.exists(covs_fname)) {
+    covs <- read.table(covs_fname, header = TRUE, stringsAsFactors = T, na.strings = c("-9","NA"))
+    covs <- subset(covs, IID %in% fam$IID)
   } else {
-    pcs <- NULL
+    covs <- NULL
   }
 
   # (2020.05.12. by Wanson Choi)
-  pop = read.table(pop, as.is = T, na.strings = c("0", "-9"))
-  colnames(pop) = c("FID", "IID", "POP")
-  pop = subset(pop, IID %in% fam$IID)
+  # pop = read.table(pop, as.is = T, na.strings = c("0", "-9"))
+  # colnames(pop) = c("FID", "IID", "POP")
+  # pop = subset(pop, IID %in% fam$IID)
   # print(head(pop))
 
-  bim <- read.table(bim_fname, as.is = T)
+  # bim <- read.table(bim_fname, as.is = T)
 
   # update pheno
-  fam$SEX[match(sex$IID, fam$IID)] <- as.factor(sex$SEX)
+  #fam$SEX[match(sex$IID, fam$IID)] <- as.factor(sex$SEX)
+  fam$SEX <- fam[,5]
   fam$PHENO[match(pheno$IID, fam$IID)] <- pheno$PHENO
   # fam$POP <- pop
-  fam$POP <- pop$POP
+  # fam$POP <- pop$POP
 
   # remove NA samples
   if (any(is.na(fam$PHENO) | is.na(fam$SEX))) {
@@ -58,8 +59,8 @@ read_data <- function(pop, phased_fname, fam_fname, bim_fname, pheno_fname, sex_
     phased = phased,
     fam = fam,
     n_sample = n_sample,
-    bim = bim,
-    pcs = pcs
+    #bim = bim,
+    covs = covs
   ))
 }
 
@@ -128,8 +129,8 @@ haplo_to_aa <- function(haplo, SNP, output_composites=FALSE) {
   return(aa)
 }
 
-get_pcs = function(fam, pcs) {
-  as.matrix(do.call(cbind, lapply(pcs, function(df) {
+get_covs = function(fam, covs) {
+  as.matrix(do.call(cbind, lapply(covs, function(df) {
     ret = data.frame(
       FID = fam$FID,
       IID = fam$IID,
@@ -309,7 +310,7 @@ main <- function(args) {
 
   data <- map(1:n_files, function(i) {
     print(sprintf("Reading files... %s", args$file[i]))
-    read_data(args$pop[i], args$phased[i], args$fam[i], args$bim[i], args$pheno[i], args$sex[i], args$pcs[i])
+    read_data( args$phased[i], args$fam[i], args$pheno[i], args$covars[i])
   })
 
   AA_ID_splitted <- data.frame(str_split_fixed(data[[1]]$phased$SNP, "_", 5)) %>%
@@ -331,10 +332,10 @@ main <- function(args) {
     data[[i]]$n_sample
   }))
 
-
-  sex <- as.factor(fam$SEX)
-  pop <- as.factor(fam$POP)
-  pcs <- get_pcs(fam, map(data, "pcs") %>% discard(is.null))
+  # sex <- as.factor(fam$SEX)
+  #pop <- as.factor(fam$POP)
+  covs <- get_covs(fam, map(data, "covs") %>% discard(is.null))
+  print(sprintf("There are %d covariates in total.",ncol(covs)))
 
   phased <-
     phased %>%
@@ -370,9 +371,9 @@ main <- function(args) {
       print(sprintf("--remove-samples-by-haplo removes %d samples", sum(remove_idx)))
       phased <- phased[, -(2 * rep(which(remove_idx), each = 2) + c(0, 1)), drop=F]
       fam <- fam[!remove_idx,]
-      sex <- sex[!remove_idx]
-      pop <- pop[!remove_idx]
-      pcs <- pcs[!remove_idx,]
+      #sex <- sex[!remove_idx]
+      # pop <- pop[!remove_idx]
+      covs <- covs[!remove_idx,]
       n_sample <- nrow(fam)
     }
   }
@@ -386,11 +387,11 @@ main <- function(args) {
   print("Starting regression...")
   # regression
   aa_phased <- phased
-  covars <- cbind(sex, pop, pcs)
+  covars <- covs
 
   if (args$omnibus) {
     print("Running omnibus test...")
-
+    print(sprintf("Total inds %d",n_sample))
     if (!is.null(args$condition)) {
       covars_aa <- next_covars_haplo(aa_phased, args$condition, n_sample)
     } else {
@@ -488,8 +489,7 @@ parser$add_argument("--phased", type = "character", nargs = "+")
 parser$add_argument("--fam", type = "character", nargs = "+")
 parser$add_argument("--bim", type = "character", nargs = "+")
 parser$add_argument("--pheno", type = "character", nargs = "+")
-parser$add_argument("--sex", type = "character", nargs = "+")
-parser$add_argument("--pcs", type = "character", nargs = "+")
+parser$add_argument("--covars", type = "character", nargs = "+")
 parser$add_argument("--maf-threshold", type = "double", default = 0.005)
 parser$add_argument("--aa-only", action='store_true', help="Run association test only for AA changes")
 parser$add_argument("--n-threads", "-n", type = "integer", default = 8)
@@ -531,8 +531,8 @@ if (length(args$exhaustive_aa_pos) >= args$exhaustive_min_aa) {
   stop("--exhaustive-min-aa should be greater than # AAs in --exhaustive-aa-pos")
 }
 
-if (is.null(args$file) & any(sapply(list(args$phased, args$fam, args$bim, args$pheno, args$sex), is.null))) {
-  stop("Either --file or all of --phased, --fam, --bim, --pheno, and --sex should be specified.")
+if (is.null(args$file) & any(sapply(list(args$phased, args$fam, args$pheno), is.null))) {
+  stop("Either --file or all of --phased, --fam, and --pheno should be specified.")
 }
 
 if (is.null(args$phased)) {
@@ -541,17 +541,17 @@ if (is.null(args$phased)) {
 if (is.null(args$fam)) {
   args$fam <- paste0(args$file, ".fam")
 }
-if (is.null(args$bim)) {
-  args$bim <- paste0(args$file, ".bim")
-}
+#if (is.null(args$bim)) {
+#  args$bim <- paste0(args$file, ".bim")
+#}
 if (is.null(args$pheno)) {
   args$pheno <- paste0(args$file, ".pheno")
 }
-if (is.null(args$sex)) {
-  args$sex <- paste0(args$file, ".sex")
-}
-if (is.null(args$pcs)) {
-  args$pcs <- paste0(args$file, ".pcs")
+#if (is.null(args$sex)) {
+#  args$sex <- paste0(args$file, ".sex")
+#}
+if (is.null(args$covars)) {
+  args$covars <- paste0(args$file, ".covs")
 }
 
 if (!is.null(args$exhaustive_aa_pos)) {

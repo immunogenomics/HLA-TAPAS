@@ -52,8 +52,7 @@ class HLAassoc(object):
             _fam=None,
             _bim=None,
             _pheno=None,
-            _sex=None,
-            _pcs=None,
+            _covars=None,
             _maf_threshold=0.005,
             f_aa_only=False,
             _nthreads=1,
@@ -396,8 +395,7 @@ class HLAassoc(object):
             _fam = kwargs['_fam']
             _bim = kwargs['_bim']
             _pheno = kwargs['_pheno']
-            _sex = kwargs['_sex']
-            _pcs = kwargs['_pcs']
+            _covars = kwargs['_covars']
             _maf_threshold = kwargs['_maf_threshold']
             f_aa_only = kwargs['f_aa_only']
             _nthreads = kwargs['_nthreads']
@@ -425,10 +423,9 @@ class HLAassoc(object):
             self.bgl_phased = None
             self.bim = None
             self.fam = None
-            self.pcs = None
+            self.covars = None
             self.pheno = None
             self.pop = None
-            self.sex = None
 
             self.Rscript = None
 
@@ -457,10 +454,10 @@ class HLAassoc(object):
                 self.bgl_phased = _file + '.bgl.phased'
                 self.bim = _file + '.bim'
                 self.fam = _file + '.fam'
-                self.pcs = _file + '.pcs'
+                self.covars = _file + '.covs'
                 self.pheno = _file + '.pheno'
                 self.pop = _file + '.pop'
-                self.sex = _file + '.sex'
+                #self.sex = _file + '.sex'
 
             else:
 
@@ -533,23 +530,23 @@ class HLAassoc(object):
 
 
 
-                # *.pcs
-                if bool(_pcs):
-                    if exists(_pcs):
-                        self.pcs = _pcs
+                # *.covs covariate file
+                if bool(_covars):
+                    if exists(_covars):
+                        self.covars = _covars
                     else:
-                        print(std_ERROR_MAIN_PROCESS_NAME + "Given Principal Component information file('{}') can't be found. "
-                                                            "Please check '--pcs' argument again." \
-                              .format(_pcs))
+                        print(std_ERROR_MAIN_PROCESS_NAME + "Given covariate information file('{}') can't be found. "
+                                                            "Please check '--covars' argument again." \
+                              .format(_covars))
 
 
-                elif not bool(_pcs) and bool(_vcf):
+                elif not bool(_covars) and bool(_vcf):
 
                     print(std_MAIN_PROCESS_NAME + "Top 10 PCs will be generated from given VCF file('{}').".format(_vcf))
 
                     if exists(_vcf):
 
-                        self.pcs = self.getTOP10PCs(_vcf, _out, self.plink)
+                        self.covars = self.getTOP10PCs(_vcf, _out, self.plink)
 
                     else:
                         print(std_ERROR_MAIN_PROCESS_NAME + "Given VCF file('{}') to generate top 10 PCs can't be found." \
@@ -558,8 +555,8 @@ class HLAassoc(object):
 
 
                 else:
-                    print(std_ERROR_MAIN_PROCESS_NAME + "Principal Component information file must be given. "
-                                                        "Please specify it with '--pcs' argument.")
+                    print(std_ERROR_MAIN_PROCESS_NAME + "covariate information file must be given. "
+                                                        "Please specify it with '--covars' argument.")
                     sys.exit()
 
 
@@ -631,34 +628,6 @@ class HLAassoc(object):
 
 
 
-                # *.sex
-                if bool(_sex):
-                    if exists(_sex):
-                        self.sex = _sex
-                    else:
-                        print(std_ERROR_MAIN_PROCESS_NAME + "Given Sex information file('{}') can't be found. "
-                                                            "Please check '--sex' argument again." \
-                              .format(_sex))
-
-                else:
-
-                    if self.hasSEXinFAM(self.fam):
-
-                        print(std_WARNING_MAIN_PROCESS_NAME +
-                              "Sex information in given fam file('{}') will be used.".format(self.fam))
-
-                        pd.read_csv(self.fam, sep='\s+', header=None, dtype=str,
-                                    names=['FID', 'IID', 'PID', 'MID', 'Sex', 'Phe'],
-                                    usecols=['FID', 'IID', 'Sex']) \
-                            .to_csv(_out+'.sex', sep=' ', header=False, index=False)
-
-                        self.sex = _out+'.sex'
-
-                    else:
-                        print(std_ERROR_MAIN_PROCESS_NAME + "Sex information file must be given. "
-                                                            "Please specify it with '--sex' argument.")
-                        sys.exit()
-
 
 
 
@@ -666,7 +635,7 @@ class HLAassoc(object):
 
             print(std_MAIN_PROCESS_NAME + "Performing Omnibus Test.")
             self.omnibus_result = self.Omnibus_Test(
-                _out, self.pop, self.bgl_phased, self.fam, self.bim, self.pheno, self.sex, self.pcs,
+                _out, self.pop, self.bgl_phased, self.fam, self.bim, self.pheno,  self.covars,
                 _maf_threshold, f_aa_only, _nthreads, f_remove_samples_by_haplo, f_remove_samples_aa_pattern,
                 _min_haplo_count,
                 _condition, _condition_gene, f_exclude_composites, f_output_composites, f_exhaustive,
@@ -797,7 +766,7 @@ class HLAassoc(object):
 
             return _out+'.assoc.linear'
 
-    def Omnibus_Test(self, _out, _pop, _bgl_phased, _fam, _bim, _pheno, _sex, _pcs,
+    def Omnibus_Test(self, _out, _pop, _bgl_phased, _fam, _bim, _pheno, _covars,
                      _maf_threshold=0.005,
                      f_aa_only=False,
                      _nthreads=1,
@@ -816,8 +785,8 @@ class HLAassoc(object):
                      _p_script='HLAassoc/src/run_omnibus_test.R'):
 
 
-        necessary = "--out {} --pop {} --phased {} --fam {} --bim {} --pheno {} --sex {} --pcs {}" \
-                    .format(_out, _pop, _bgl_phased, _fam, _bim, _pheno, _sex, _pcs)
+        necessary = "--out {} --pop {} --phased {} --fam {} --bim {} --pheno {}  --covars {}" \
+                    .format(_out, _pop, _bgl_phased, _fam, _bim, _pheno, _covars)
 
         default = "--maf-threshold {} --n-threads {} --exhaustive-min-aa {} --exhaustive-max-aa {} --min-haplo-count {}" \
                     .format(_maf_threshold, _nthreads, _exhaustive_min_aa, _exhaustive_max_aa, _min_haplo_count)
@@ -951,13 +920,13 @@ class HLAassoc(object):
             sys.exit()
         else:
             # Succeed
-            os.system('mv {} {}'.format(_out+'.eigenvec', _out+'.pcs'))
+            os.system('mv {} {}'.format(_out+'.eigenvec', _out+'.covs'))
             os.system('rm {}'.format(_out+'.eigenval'))
             os.system('rm {}'.format(_out+'.log'))
             if exists(_out+'.nosex'):
                 os.system('rm {}'.format(_out+'.nosex'))
 
-            return _out+'.pcs'
+            return _out+'.covs'
 
 
 

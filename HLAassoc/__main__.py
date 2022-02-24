@@ -147,15 +147,15 @@ if __name__ == "__main__":
 
     subp2.add_argument("--vcf", help="\nIMPUTED or PHASED vcf file to perform Omnibus Test. (*.vcf(.gz))\n\n")
     subp2.add_argument("--file", help="\nThe common file prefix to nominate '--phased(*.bgl.phased)', '--fam(*.fam)', "
-                                      "'--bim(*.bim)', '--pheno(*.pheno)', '--sex(*.sex)', '--pcs(*.pcs)' arguments "
+                                      "'--bim(*.bim)', '--pheno(*.pheno)', '--covars(*.covs)' arguments "
                                       "all at once.\n\n")
     subp2.add_argument("--pop", help="\nFile name for Population information of samples.\n\n")
     subp2.add_argument("--phased", help="\nFile name for BEAGLE phased information.\n\n")
     subp2.add_argument("--fam", help="\nFile name for PLINK fam file. (*.fam)\n\n")
     subp2.add_argument("--bim", help="\nFile name for PLINK bim file. (*.bim)\n\n")
     subp2.add_argument("--pheno", help="\nFile name for Phenotype information of samples. (Case:1 / Control:0).\n\n")
-    subp2.add_argument("--sex", help="\nFile name for Sex information of samples.\n\n")
-    subp2.add_argument("--pcs", help="\nFile name for Principal Components information.\n\n")
+    # subp2.add_argument("--sex", help="\nFile name for Sex information of samples.\n\n")
+    subp2.add_argument("--covars", help="\nFile name for covariate information (e.g. principal components, age, sex, etc.\n\n")
     subp2.add_argument("--maf-threshold", help="\nThreshold value for Minor Allele Frequency.\n\n", default=0.005)
     subp2.add_argument("--aa-only", help="\nRun association test only for AA changes.\n\n", action='store_true')
     subp2.add_argument("--nthreads", help="\nThe number of threads to be used in the Omnibus Test.\n\n", type=int, default=1)
@@ -226,7 +226,7 @@ if __name__ == "__main__":
     elif args.Main_Menu == 'OMNIBUS':
         HLAassoc(args.Main_Menu, args.out, args.dependency,
                   _vcf=args.vcf, _file=args.file, _pop=args.pop, _phased=args.phased, _fam=args.fam, _bim=args.bim,
-                  _pheno=args.pheno, _sex=args.sex, _pcs=args.pcs, _maf_threshold=args.maf_threshold,
+                  _pheno=args.pheno, _covars=args.covars, _maf_threshold=args.maf_threshold,
                   f_aa_only=args.aa_only, _nthreads=args.nthreads, f_remove_samples_by_haplo=args.remove_samples_by_haplo,
                   f_remove_samples_aa_pattern=args.remove_samples_aa_pattern, _min_haplo_count=args.min_haplo_count,
                   _condition=args.condition, _condition_gene=args.condition_gene,
