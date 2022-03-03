@@ -71,8 +71,9 @@ Assuming you have an imputed vcf file (e.g., from the Michigan imputation server
 
 PLINK fam file must Phenotype information. All samples will be considered to be originated from the same population.
 
+If your phenotype is binary, use the logistic module
 ```
-$ python -m HLAassoc OMNIBUS \
+$ python -m HLAassoc OMNIBUS_LOGISTIC \
     --vcf HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.bgl.phased.vcf.gz \
     --bim HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.REF.bglv4.bim \
     --fam HLAassoc/example/OMNIBUS/Case+Control.300+300.chr6.hg18.fam \
@@ -81,6 +82,16 @@ $ python -m HLAassoc OMNIBUS \
     --maf-threshold 0
 ```
 
+If your phenotype is continuous, use the linear model
+```
+$ python -m HLAassoc OMNIBUS_LINEAR \
+    --vcf HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.bgl.phased.vcf.gz \
+    --bim HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.REF.bglv4.bim \
+    --fam HLAassoc/example/OMNIBUS/Case+Control.300+300.chr6.hg18.fam \
+    --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
+    --aa-only \
+    --maf-threshold 0
+```
 <!-- <br>
 
 ```
