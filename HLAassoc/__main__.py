@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
 
     ### subparser 2 : Omnibus Test
-    subp2 = subparsers.add_parser('OMNIBUS',
+    subp2 = subparsers.add_parser('OMNIBUS_LOGISTIC',
                                   help='Omnibus Test',
                                   add_help=False,
                                   formatter_class=argparse.RawTextHelpFormatter,
@@ -223,7 +223,7 @@ if __name__ == "__main__":
                   _condition=args.condition, _condition_list=args.condition_list,
                   _hped=args.hped, _chped=args.chped, _hat=args.hat)
 
-    elif args.Main_Menu == 'OMNIBUS':
+    elif args.Main_Menu == 'OMNIBUS_LOGISTIC':
         HLAassoc(args.Main_Menu, args.out, args.dependency,
                   _vcf=args.vcf, _file=args.file, _pop=args.pop, _phased=args.phased, _fam=args.fam, _bim=args.bim,
                   _pheno=args.pheno, _covars=args.covars, _maf_threshold=args.maf_threshold,

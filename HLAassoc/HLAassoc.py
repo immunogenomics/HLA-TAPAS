@@ -384,7 +384,7 @@ class HLAassoc(object):
                                           _a1_allele=self.a1_allele)
 
 
-        elif _MAIN_MENU == 'OMNIBUS':
+        elif _MAIN_MENU == 'OMNIBUS_LOGISTIC':
 
             ### Argument Parsing
 
@@ -456,7 +456,7 @@ class HLAassoc(object):
                 self.fam = _file + '.fam'
                 self.covars = _file + '.covs'
                 self.pheno = _file + '.pheno'
-                self.pop = _file + '.pop'
+                #self.pop = _file + '.pop'
                 #self.sex = _file + '.sex'
 
             else:
