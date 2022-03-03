@@ -1,0 +1,100 @@
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+
+Attaching package: ‘data.table’
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+$aa_only
+[1] TRUE
+
+$bim
+[1] "HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bim"
+
+$condition
+NULL
+
+$condition_gene
+NULL
+
+$covars
+[1] "HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pcs"
+
+$exclude_composites
+[1] FALSE
+
+$exhaustive
+NULL
+
+$exhaustive_aa_pos
+NULL
+
+$exhaustive_max_aa
+[1] 2
+
+$exhaustive_min_aa
+[1] 2
+
+$exhaustive_no_filter
+[1] FALSE
+
+$fam
+[1] "HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.fam"
+
+$file
+NULL
+
+$maf_threshold
+[1] 0
+
+$min_haplo_count
+[1] 10
+
+$n_threads
+[1] 1
+
+$omnibus
+[1] TRUE
+
+$out
+[1] "Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS"
+
+$output_composites
+[1] FALSE
+
+$phased
+[1] "HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bgl.phased"
+
+$pheno
+[1] "HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pheno"
+
+$pop
+[1] "HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop"
+
+$remove_samples_aa_pattern
+NULL
+
+$remove_samples_by_haplo
+[1] FALSE
+
+character(0)
+[1] "Starting regression..."
+[1] "Running omnibus test..."
+Warning message:
+In if (is.na(fam$PHENO)) { :
+  the condition has length > 1 and only the first element will be used

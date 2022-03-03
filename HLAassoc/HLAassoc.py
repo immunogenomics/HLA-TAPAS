@@ -53,8 +53,8 @@ class HLAassoc(object):
             _bim=None,
             _pheno=None,
             _covars=None,
-            _maf_threshold=0.005,
-            f_aa_only=False,
+            _maf_threshold=0,
+            f_aa_only=True,
             _nthreads=1,
             f_remove_samples_by_haplo=False,
             f_remove_samples_aa_pattern=False,
@@ -601,32 +601,29 @@ class HLAassoc(object):
                         sys.exit()
 
 
-
                 # *.pop
-                if bool(_pop):
-                    if exists(_pop):
-                        self.pop = _pop
-                    else:
-                        print(std_ERROR_MAIN_PROCESS_NAME + "Given Population information file('{}') can't be found. "
-                                                            "Please check '--pop' argument again." \
-                            .format(_pop))
+                # if bool(_pop):
+                #    if exists(_pop):
+                #        self.pop = _pop
+                #    else:
+                #        print(std_ERROR_MAIN_PROCESS_NAME + "Given Population information file('{}') can't be found. "
+                #                                            "Please check '--pop' argument again." \
+                #            .format(_pop))
+		#
+                # else:
+                #    print(std_WARNING_MAIN_PROCESS_NAME +
+                #         "All samples will be assumed to be originated from same population.")
 
-                else:
-                    print(std_WARNING_MAIN_PROCESS_NAME +
-                          "All samples will be assumed to be originated from same population.")
+                #    pd.read_csv(self.fam, sep='\s+', header=None, dtype=str,
+                #                names=['FID', 'IID', 'PID', 'MID', 'Sex', 'Phe']) \
+                #        .pipe(self.getDummyPOP) \
+                #        .to_csv(_out+'.pop', sep=' ', header=False, index=False)
 
-                    pd.read_csv(self.fam, sep='\s+', header=None, dtype=str,
-                                names=['FID', 'IID', 'PID', 'MID', 'Sex', 'Phe']) \
-                        .pipe(self.getDummyPOP) \
-                        .to_csv(_out+'.pop', sep=' ', header=False, index=False)
-
-                    self.pop = _out+'.pop'
+                 #   self.pop = _out+'.pop'
 
                     # print(std_ERROR_MAIN_PROCESS_NAME + "Population information file must be given. "
                     #                                     "Please specify it with '--pop' argument.")
                     # sys.exit()
-
-
 
 
 
@@ -767,22 +764,22 @@ class HLAassoc(object):
             return _out+'.assoc.linear'
 
     def Omnibus_Test(self, _out, _pop, _bgl_phased, _fam, _bim, _pheno, _covars,
-                     _maf_threshold=0.005,
-                     f_aa_only=False,
+                     _maf_threshold=0,
+                     f_aa_only=True,
                      _nthreads=1,
                      f_remove_samples_by_haplo=False,
                      f_remove_samples_aa_pattern=False,
                      _min_haplo_count=10,
                      _condition=None,
                      _condition_gene=None,
-                     f_exclude_composites=False,
+                     f_exclude_composites=True,
                      f_output_composites=False,
                      f_exhaustive=False,
                      _exhaustive_aa_pos=None,
                      _exhaustive_min_aa=2,
                      _exhaustive_max_aa=2,
                      f_exhaustive_no_filter=False,
-                     _p_script='HLAassoc/src/run_omnibus_test.R'):
+                     _p_script='HLAassoc/src/run_omnibus_test_LOGISTIC.R'):
 
 
         necessary = "--out {} --pop {} --phased {} --fam {} --bim {} --pheno {}  --covars {}" \
@@ -905,28 +902,28 @@ class HLAassoc(object):
 
 
 
+    # remove this function since pcs should not be calculated based on MHC region only. Yang (March 03. 2022)
+    # def getTOP10PCs(self, _vcf, _out, _plink):
+    #
+    #    command = '{} --pca 10 header tabs --allow-no-sex --vcf {} --out {}'.format(_plink, _vcf, _out)
 
-    def getTOP10PCs(self, _vcf, _out, _plink):
+     #   try:
+     #       # print(command)
+      #      subprocess.run(re.split(r'\s+', command), check=True, stdout=DEVNULL, stderr=DEVNULL)
+      #  except CalledProcessError:
+     #       # Fail
+     #       print(std_ERROR_MAIN_PROCESS_NAME + "Generating Top 10 PCs failed. See PLINK log file('{}')." \
+     #             .format(_out+'.log'))
+     #       sys.exit()
+     #   else:
+      #      # Succeed
+       #     os.system('mv {} {}'.format(_out+'.eigenvec', _out+'.covs'))
+        #    os.system('rm {}'.format(_out+'.eigenval'))
+        #    os.system('rm {}'.format(_out+'.log'))
+         #   if exists(_out+'.nosex'):
+          #      os.system('rm {}'.format(_out+'.nosex'))
 
-        command = '{} --pca 10 header tabs --allow-no-sex --vcf {} --out {}'.format(_plink, _vcf, _out)
-
-        try:
-            # print(command)
-            subprocess.run(re.split(r'\s+', command), check=True, stdout=DEVNULL, stderr=DEVNULL)
-        except CalledProcessError:
-            # Fail
-            print(std_ERROR_MAIN_PROCESS_NAME + "Generating Top 10 PCs failed. See PLINK log file('{}')." \
-                  .format(_out+'.log'))
-            sys.exit()
-        else:
-            # Succeed
-            os.system('mv {} {}'.format(_out+'.eigenvec', _out+'.covs'))
-            os.system('rm {}'.format(_out+'.eigenval'))
-            os.system('rm {}'.format(_out+'.log'))
-            if exists(_out+'.nosex'):
-                os.system('rm {}'.format(_out+'.nosex'))
-
-            return _out+'.covs'
+           # return _out+'.covs'
 
 
 

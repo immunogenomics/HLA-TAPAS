@@ -156,8 +156,8 @@ if __name__ == "__main__":
     subp2.add_argument("--pheno", help="\nFile name for Phenotype information of samples. (Case:1 / Control:0).\n\n")
     # subp2.add_argument("--sex", help="\nFile name for Sex information of samples.\n\n")
     subp2.add_argument("--covars", help="\nFile name for covariate information (e.g. principal components, age, sex, etc.\n\n")
-    subp2.add_argument("--maf-threshold", help="\nThreshold value for Minor Allele Frequency.\n\n", default=0.005)
-    subp2.add_argument("--aa-only", help="\nRun association test only for AA changes.\n\n", action='store_true')
+    subp2.add_argument("--maf-threshold", help="\nThreshold value for Minor Allele Frequency.\n\n", default=0.0)
+    subp2.add_argument("--aa-only", help="\nRun association test only for AA changes.\n\n", action='store_false')
     subp2.add_argument("--nthreads", help="\nThe number of threads to be used in the Omnibus Test.\n\n", type=int, default=1)
     subp2.add_argument("--out", "-o", help="\nOutput file name.\n\n", required=True)
 
@@ -168,7 +168,7 @@ if __name__ == "__main__":
 
     subp2.add_argument("--condition", type=str, help="\nFile name for conditioning.\n\n")
     subp2.add_argument("--condition-gene", type=str, help="\nGene name for conditioning.\n\n")
-    subp2.add_argument("--exclude-composites", action='store_true',
+    subp2.add_argument("--exclude-composites", action='store_false',
                        help="\nExclude composite amino acids from omnibus test.\n\n")
     subp2.add_argument("--output-composites", action='store_true',
                        help="\nOutput composite amino acids in .haplo.txt.\n\n")

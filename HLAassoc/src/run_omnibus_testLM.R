@@ -11,61 +11,56 @@ library(rcompanion)
 options(datatable.fread.datatable = FALSE)
 options(stringsAsFactors = FALSE)
 
-read_data <- function(pop, phased_fname, fam_fname, bim_fname, pheno_fname, sex_fname, pcs_fname = NULL) {
+read_data <- function(phased_fname, fam_fname, pheno_fname, covs_fname = NULL) {
   x <- fread(phased_fname, header = FALSE)
   phased <- x[6:nrow(x), 2:ncol(x)]
   colnames(phased) <- c("SNP", x[2, 3:ncol(x)])
-  print(head(phased))
 
   fam <- read.table(fam_fname, as.is = T, na.strings = "-9")
   colnames(fam) <- c("FID", "IID", "FAT", "MOT", "SEX", "PHENO")
-  # print(head(fam))
-  
   pheno <- read.table(pheno_fname, as.is = T, na.strings = c("-9", "NA"))
   colnames(pheno) <- c("FID", "IID", "PHENO")
   pheno <- subset(pheno, IID %in% fam$IID)
-  print(head(pheno))
 
-  sex <- read.table(sex_fname, as.is = T, na.strings = c("0", "-9"))
-  colnames(sex) <- c("FID", "IID", "SEX")
-  sex <- subset(sex, IID %in% fam$IID)
+  #sex <- read.table(sex_fname, as.is = T, na.strings = c("0", "-9"))
+  #colnames(sex) <- c("FID", "IID", "SEX")
+  #sex <- subset(sex, IID %in% fam$IID)
 
-  if (!is.null(pcs_fname) & file.exists(pcs_fname)) {
-    pcs <- read.table(pcs_fname, T, as.is = T)
-    pcs <- subset(pcs, IID %in% fam$IID)
+  if (!is.null(covs_fname) & file.exists(covs_fname)) {
+    covs <- read.table(covs_fname, header = TRUE, stringsAsFactors = T, na.strings = c("-9","NA"))
+    covs <- subset(covs, IID %in% fam$IID)
   } else {
-    pcs <- NULL
+    covs <- NULL
   }
-  
-  # (2020.05.12. by Wanson Choi)
-  pop = read.table(pop, as.is = T, na.strings = c("0", "-9"))
-  colnames(pop) = c("FID", "IID", "POP")
-  pop = subset(pop, IID %in% fam$IID)
-  print(head(pop))
 
-  bim <- read.table(bim_fname, as.is = T)
+  # (2020.05.12. by Wanson Choi)
+  # pop = read.table(pop, as.is = T, na.strings = c("0", "-9"))
+  # colnames(pop) = c("FID", "IID", "POP")
+  # pop = subset(pop, IID %in% fam$IID)
+  # print(head(pop))
+
+  # bim <- read.table(bim_fname, as.is = T)
 
   # update pheno
-  fam$SEX[match(sex$IID, fam$IID)] <- as.factor(sex$SEX)
-  fam$PHENO[match(pheno$IID, fam$IID)] <- as.numeric(pheno$PHENO)
-  #fam$POP <- pop
-  fam$POP = pop$POP
-  print(head(fam))
+  #fam$SEX[match(sex$IID, fam$IID)] <- as.factor(sex$SEX)
+  fam$SEX <- fam[,5]
+  fam$PHENO[match(pheno$IID, fam$IID)] <- pheno$PHENO
+  # fam$POP <- pop
+  # fam$POP <- pop$POP
 
   # remove NA samples
-  # phased <- phased[, -(2 * rep(which(is.na(fam$PHENO) | is.na(fam$SEX)), each = 2) + (0:1))]
-  # fam <- na.omit(fam)
+  if (any(is.na(fam$PHENO) | is.na(fam$SEX))) {
+    phased <- phased[, -(2 * rep(which(is.na(fam$PHENO) | is.na(fam$SEX)), each = 2) + (0:1))]
+    fam <- na.omit(fam)
+  } # added small exeption handling by Wanson Choi (2020.05.14.)
   n_sample <- nrow(fam)
-  
-  # print("Hello")
-  # print(head(phased))
 
   return(list(
     phased = phased,
     fam = fam,
     n_sample = n_sample,
-    bim = bim,
-    pcs = pcs
+    #bim = bim,
+    covs = covs
   ))
 }
 
@@ -95,12 +90,6 @@ logit <- function(...) {
 }
 
 glm_obj_base_haplo <- function(pheno, covars = NULL, covars_aa = NULL, regfun = lm) {
-  
-  # print("glm_obj_base_haplo")
-  # print(head(pheno))
-  # print(head(covars))
-  # print(head(covars_aa))
-
   if (is.null(covars)) {
     obj_base <- regfun(pheno ~ 1)
   } else if (is.null(covars_aa)) {
@@ -140,8 +129,8 @@ haplo_to_aa <- function(haplo, SNP, output_composites=FALSE) {
   return(aa)
 }
 
-get_pcs = function(fam, pcs) {
-  as.matrix(do.call(cbind, lapply(pcs, function(df) {
+get_covs = function(fam, covs) {
+  as.matrix(do.call(cbind, lapply(covs, function(df) {
     ret = data.frame(
       FID = fam$FID,
       IID = fam$IID,
@@ -269,12 +258,6 @@ omnibus_test_haplo <- function(x, pheno, obj_base, covars = NULL, covars_aa = NU
 
 # for parallel
 omnibus_test_haplo_wrapper <- function(aa_phased, n_sample, pheno, obj_base, regfun = lm, covars = NULL, covars_aa = NULL, subset = NULL, maf_threshold = NULL, output_composites=FALSE, cluster = NULL) {
-  
-  # print("in 'omnibus_test_haplo_wrapper'.")
-  # print(head(pheno))
-  # print(head(covars))
-  # print(head(covars_aa))
-  
   obj_base <- glm_obj_base_haplo(pheno, covars, covars_aa)
   f <- function(x) {
     omnibus_test_haplo(
@@ -327,11 +310,9 @@ main <- function(args) {
 
   data <- map(1:n_files, function(i) {
     print(sprintf("Reading files... %s", args$file[i]))
-    read_data(args$pop[i], args$phased[i], args$fam[i], args$bim[i], args$pheno[i], args$sex[i], args$pcs[i])
+    read_data( args$phased[i], args$fam[i], args$pheno[i], args$covars[i])
   })
 
-  print(head(data[[1]]$phased))
-  
   AA_ID_splitted <- data.frame(str_split_fixed(data[[1]]$phased$SNP, "_", 5)) %>%
     mutate(X1 = if_else(X1 != "INDEL", X1, str_c(X1, X2, sep="_"))) %>%
     mutate(
@@ -347,23 +328,14 @@ main <- function(args) {
   fam <- map_dfr(1:n_files, function(i) {
     data[[i]]$fam
   })
-  # print("asdf")
-  # print(fam)
   n_sample <- sum(map_int(1:n_files, function(i) {
     data[[i]]$n_sample
   }))
-  
-  # (2020. 05. 13. WS.)
-  # Samples can be given as disjointly distributed multiple files. 
-  # Above code lines merge those disjointly distributed multiple files. (cbind(), map_df(), map_int(), etc.)
 
-
-  sex <- as.factor(fam$SEX)
-  pop <- as.factor(fam$POP)
-  pcs <- get_pcs(fam, map(data, "pcs") %>% discard(is.null))
-  
-  # print("sex")
-  # print(head(sex))
+  # sex <- as.factor(fam$SEX)
+  #pop <- as.factor(fam$POP)
+  covs <- get_covs(fam, map(data, "covs") %>% discard(is.null))
+  print(sprintf("There are %d covariates in total.",ncol(covs)))
 
   phased <-
     phased %>%
@@ -379,34 +351,18 @@ main <- function(args) {
       AA_POS = AA_ID_splitted[, 3],
       POS = AA_ID_splitted[, 4]
     )
-  # print("adsf")
-  # print(head(phased))
 
   if (args$aa_only) {
     phased <- phased %>% filter(TYPE == "AA")
   }
-  # print("adsf")
-  # print(head(phased))
-  
+
   if (args$exclude_composites) {
     phased <- phased %>% filter(!str_detect(SNP, "^AA_.*_[A-Zx]{2,}$"))
   }
-  print("adsf")
-  print(head(phased))
-  
-  # (2020. 05. 13.)
-  # Major preprocessings for `phased` dataframe are done here.
-  # write.table(phased, '/home/wansonchoi/Projects/yang/HLA-TAPAS/tests/1958BC+HM_CEU_REF.IMPUTED.DF.txt', sep='\t', row.names = F, col.names = T, quote = F)
-  
+
   # remove samples by haplotype constructed using specific AAs (e.g., all HLA-B AAs)
   if (args$remove_samples_by_haplo) {
     aa_ids <- phased %>% filter(str_detect(AA_ID, args$remove_samples_aa_pattern)) %>% .$AA_ID
-    # > phased %>% filter(str_detect(AA_ID, args$remove_samples_aa_pattern)) %>% .$AA_ID
-    # [1] "AA_B_325_31430282" "AA_B_305_31430889" "AA_B_282_31430958" "AA_B_199_31431300" "AA_B_194_31431315" "AA_B_180_31431931"
-    # [7] "AA_B_178_31431937" "AA_B_177_31431940" "AA_B_171_31431958" "AA_B_167_31431970" "AA_B_163_31431982" "AA_B_163_31431982"    
-    # (2020. 05. 13. WS.)
-    # Literally, It excludes a.a. markers of given pattern by 'args$remove_samples_aa_pattern'.
-    
     haplo <- get_haplo(next_covars_haplo(phased, aa_ids, n_sample))
     haplo <- haplo[,colSums(haplo) < args$min_haplo_count, drop=F]
 
@@ -415,17 +371,12 @@ main <- function(args) {
       print(sprintf("--remove-samples-by-haplo removes %d samples", sum(remove_idx)))
       phased <- phased[, -(2 * rep(which(remove_idx), each = 2) + c(0, 1)), drop=F]
       fam <- fam[!remove_idx,]
-      sex <- sex[!remove_idx]
-      pop <- pop[!remove_idx]
-      pcs <- pcs[!remove_idx,]
+      #sex <- sex[!remove_idx]
+      # pop <- pop[!remove_idx]
+      covs <- covs[!remove_idx,]
       n_sample <- nrow(fam)
     }
   }
-  
-  print("sex:")
-  print(head(sex))
-  print("fam:")
-  print(head(fam))
 
   if (args$n_threads > 1) {
     cluster <- new_cluster(args$n_threads)
@@ -436,11 +387,11 @@ main <- function(args) {
   print("Starting regression...")
   # regression
   aa_phased <- phased
-  covars <- cbind(sex, pop, pcs)
+  covars <- covs
 
   if (args$omnibus) {
     print("Running omnibus test...")
-
+    print(sprintf("Total inds %d",n_sample))
     if (!is.null(args$condition)) {
       covars_aa <- next_covars_haplo(aa_phased, args$condition, n_sample)
     } else {
@@ -453,12 +404,6 @@ main <- function(args) {
       group_by(AA_ID) %>%
       filter(n() > 1) %>%
       ungroup()
-    
-    print("in Omnibus")
-    print(head(fam$PHENO))
-    print(head(covars))
-    print("covars_aa")
-    print(head(covars_aa))
 
     omnibus <-
       omnibus_test_haplo_wrapper(
@@ -544,8 +489,7 @@ parser$add_argument("--phased", type = "character", nargs = "+")
 parser$add_argument("--fam", type = "character", nargs = "+")
 parser$add_argument("--bim", type = "character", nargs = "+")
 parser$add_argument("--pheno", type = "character", nargs = "+")
-parser$add_argument("--sex", type = "character", nargs = "+")
-parser$add_argument("--pcs", type = "character", nargs = "+")
+parser$add_argument("--covars", type = "character", nargs = "+")
 parser$add_argument("--maf-threshold", type = "double", default = 0.005)
 parser$add_argument("--aa-only", action='store_true', help="Run association test only for AA changes")
 parser$add_argument("--n-threads", "-n", type = "integer", default = 8)
@@ -568,16 +512,8 @@ parser$add_argument("--exhaustive-min-aa", type = "integer", default=2, help="Mi
 parser$add_argument("--exhaustive-max-aa", type = "integer", default=2, help="Maximum number of AA positions to form a combination")
 parser$add_argument("--exhaustive-no-filter", action='store_true', help="Don't filter non-increasing AA combinations")
 
-# args <- parser$parse_args()
-# print(args)
-
-
-## Test by Wanson (2020.05.13.)
-s = '--file /home/wansonchoi/Projects/yang/HLA-TAPAS/tests/1958BC+HM_CEU_REF.IMPUTED --out /home/wansonchoi/Projects/yang/HLA-TAPAS/tests/1958BC+HM_CEU_REF.IMPUTED.OM_test --aa-only --omnibus --remove-samples-by-haplo --remove-samples-aa-pattern AA_B --min-haplo-count 10 --maf-threshold 0 --pop /home/wansonchoi/Projects/yang/HLA-TAPAS/tests/1958BC+HM_CEU_REF.IMPUTED.pop'
-args <- parser$parse_args(strsplit(s, ' ')[[1]])
-
-
-
+args <- parser$parse_args()
+print(args)
 
 if (!args$omnibus & is.null(args$exhaustive)) {
   stop("At least --omnibus or --exhaustive should be specified")
@@ -595,8 +531,8 @@ if (length(args$exhaustive_aa_pos) >= args$exhaustive_min_aa) {
   stop("--exhaustive-min-aa should be greater than # AAs in --exhaustive-aa-pos")
 }
 
-if (is.null(args$file) & any(sapply(list(args$phased, args$fam, args$bim, args$pheno, args$sex), is.null))) {
-  stop("Either --file or all of --phased, --fam, --bim, --pheno, and --sex should be specified.")
+if (is.null(args$file) & any(sapply(list(args$phased, args$fam, args$pheno), is.null))) {
+  stop("Either --file or all of --phased, --fam, and --pheno should be specified.")
 }
 
 if (is.null(args$phased)) {
@@ -605,22 +541,21 @@ if (is.null(args$phased)) {
 if (is.null(args$fam)) {
   args$fam <- paste0(args$file, ".fam")
 }
-if (is.null(args$bim)) {
-  args$bim <- paste0(args$file, ".bim")
-}
+#if (is.null(args$bim)) {
+#  args$bim <- paste0(args$file, ".bim")
+#}
 if (is.null(args$pheno)) {
   args$pheno <- paste0(args$file, ".pheno")
 }
-if (is.null(args$sex)) {
-  args$sex <- paste0(args$file, ".sex")
-}
-if (is.null(args$pcs)) {
-  args$pcs <- paste0(args$file, ".pcs")
+#if (is.null(args$sex)) {
+#  args$sex <- paste0(args$file, ".sex")
+#}
+if (is.null(args$covars)) {
+  args$covars <- paste0(args$file, ".covs")
 }
 
 if (!is.null(args$exhaustive_aa_pos)) {
   args$exhaustive_aa_pos <- sort(args$exhaustive_aa_pos)
 }
 
-print(args)
 main(args)
