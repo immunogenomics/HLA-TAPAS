@@ -207,7 +207,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
         ### (3) stuffs to remove ( *.AA.TMP.{bed,bim,fam}, to_remove ) ###
         command = ' '.join(
             [plink, "--file", OUTPUT + '.AA.CODED', "--missing-genotype 0", "--make-bed", "--out", OUTPUT + '.AA.TMP'])
-        print(command)
+        # print(command)
         os.system(command)
 
         command = ' '.join(
@@ -220,7 +220,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
         In the new version of Framework, marker label is "INDEL".
         """
 
-        print(command)
+        # print(command)
         os.system(command)
 
 
@@ -231,7 +231,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
              "--exclude", os.path.join(INTERMEDIATE_PATH, "to_remove"),
              "--make-bed",
              "--out", OUTPUT + '.AA.CODED'])
-        print(command)
+        # print(command)
         os.system(command)
 
 
@@ -275,7 +275,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
 
         ### (2) Final Encoded Outputs ( *.HLA.{bed,bim,fam,nosex,log} ) ###
         command = ' '.join([plink, "--file", OUTPUT + '.HLA', "--make-bed", "--out", OUTPUT + '.HLA'])
-        print(command)
+        # print(command)
         os.system(command)
 
         index += 1
@@ -308,7 +308,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
         HLAtoSequences(HLA_DATA, _dictionary_SNPS_seq, "SNPS", OUTPUT)
 
         command = ' '.join(["cp", _dictionary_SNPS_map, OUTPUT + '.SNPS.map'])
-        print(command)
+        # print(command)
         os.system(command)
 
         index += 1
@@ -325,14 +325,14 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
         ### (3) Stuffs to remove ( *.SNPS.TMP.{bed,bim,fam}, to_remove )
         command = ' '.join([plink, "--file", OUTPUT + '.SNPS.CODED', "--missing-genotype 0", "--make-bed", "--out",
                             OUTPUT + '.SNPS.TMP'])
-        print(command)
+        # print(command)
         os.system(command)
 
 
         command = ' '.join(
             ["awk", '\'{if ($5 == "0" || $5 == "x" || $6 == "x"){print $2}}\'', OUTPUT + '.SNPS.TMP.bim', "|", "cut -f2", ">",
              os.path.join(INTERMEDIATE_PATH, "to_remove")])
-        print(command)
+        # print(command)
         os.system(command)
 
 
@@ -342,7 +342,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
              "--exclude", os.path.join(INTERMEDIATE_PATH, "to_remove"),
              "--make-bed",
              "--out", OUTPUT + '.SNPS.CODED'])
-        print(command)
+        # print(command)
         os.system(command)
 
 
@@ -419,54 +419,54 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
 
             ### (1) --filter-founders to variants data ( *.FOUNDERS )
             command = ' '.join([plink, "--bfile", SNP_DATA, "--filter-founders", "--mind 0.3", "--alleleACGT", "--make-bed", "--out", SNP_DATA2+'.FOUNDERS'])
-            print(command)
+            # print(command)
             os.system(command)
 
 
             ### (2) QC ( *.FOUNDERS.{hardy,freq,missing )
             # Initial QC on Reference SNP panel
             command = ' '.join([plink, "--bfile", SNP_DATA2+'.FOUNDERS', "--hardy", "--out", SNP_DATA2+'.FOUNDERS.hardy'])
-            print(command)
+            # print(command)
             os.system(command)
             command = ' '.join([plink, "--bfile", SNP_DATA2+'.FOUNDERS', "--freq", "--out", SNP_DATA2+'.FOUNDERS.freq'])
-            print(command)
+            # print(command)
             os.system(command)
             command = ' '.join([plink, "--bfile", SNP_DATA2+'.FOUNDERS', "--missing", "--out", SNP_DATA2+'.FOUNDERS.missing'])
-            print(command)
+            # print(command)
             os.system(command)
 
 
             ### (3) Stuffs to remove ( remove.snps.hardy, remove.snps.freq, remove.snps.missing, all.remove.snps )
             command = ' '.join(["awk", "'{if (NR > 1){print}}'", SNP_DATA2+'.FOUNDERS.hardy.hwe', "|", "awk", "' $9 < 0.000001 { print $2 }'", "|", "sort -u", ">", os.path.join(INTERMEDIATE_PATH, "remove.snps.hardy")])
-            print(command)
+            # print(command)
             os.system(command)
             command = ' '.join(["awk", "'{if (NR > 1){print}}'", SNP_DATA2+'.FOUNDERS.freq.frq', "|", "awk", "' $5 < 0.01 { print $2 } '", ">", os.path.join(INTERMEDIATE_PATH, "remove.snps.freq")])
-            print(command)
+            # print(command)
             os.system(command)
             command = ' '.join(["awk", "'{if (NR > 1){print}}'", SNP_DATA2+'.FOUNDERS.missing.lmiss', "|", "awk", "' $5 > 0.05 { print $2 } '", ">", os.path.join(INTERMEDIATE_PATH, "remove.snps.missing")])
-            print(command)
+            # print(command)
             os.system(command)
             command = ' '.join(["cat", os.path.join(INTERMEDIATE_PATH, "remove.snps.*"), "|", "sort -u", ">", os.path.join(INTERMEDIATE_PATH, "all.remove.snps")])
-            print(command)
+            # print(command)
             os.system(command)
 
 
             ### (4) Filtering out Quality-controled FOUNDERS ( *.FOUNDERS.QC )
             command = ' '.join([plink, "--bfile", SNP_DATA2+'.FOUNDERS', "--allow-no-sex", "--exclude", os.path.join(INTERMEDIATE_PATH, "all.remove.snps"), "--make-bed", "--out", SNP_DATA2+'.FOUNDERS.QC'])
-            print(command)
+            # print(command)
             os.system(command)
 
             # Founders are identified here as individuals with "0"s in mother and father IDs in .fam file
 
             ### (5) --filter-founders to HLA information ( *.{HLA,AA,SNPS}.FOUNDERS )
             command = ' '.join([plink, "--bfile", OUTPUT+'.HLA', "--filter-founders", "--maf 0.0001", "--make-bed", "--out", OUTPUT+'.HLA.FOUNDERS'])
-            print(command)
+            # print(command)
             os.system(command)
             command = ' '.join([plink, "--bfile", OUTPUT+'.SNPS.CODED', "--filter-founders", "--maf 0.0001", "--make-bed", "--out", OUTPUT+'.SNPS.FOUNDERS'])
-            print(command)
+            # print(command)
             os.system(command)
             command = ' '.join([plink, "--bfile", OUTPUT+'.AA.CODED', "--filter-founders", "--maf 0.0001", "--make-bed", "--out", OUTPUT+'.AA.FOUNDERS'])
-            print(command)
+            # print(command)
             os.system(command)
 
 
@@ -530,15 +530,15 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
 
 
             command = ' '.join(["echo", OUTPUT + '.HLA.FOUNDERS.bed', OUTPUT + '.HLA.FOUNDERS.bim', OUTPUT + '.HLA.FOUNDERS.fam', ">", TMP_merged_list])
-            print(command)
+            # print(command)
             os.system(command)
 
             command = ' '.join(["echo", OUTPUT + '.AA.FOUNDERS.bed', OUTPUT + '.AA.FOUNDERS.bim', OUTPUT + '.AA.FOUNDERS.fam', ">>", TMP_merged_list])
-            print(command)
+            # print(command)
             os.system(command)
 
             command = ' '.join(["echo", OUTPUT + '.SNPS.FOUNDERS.bed', OUTPUT + '.SNPS.FOUNDERS.bim', OUTPUT + '.SNPS.FOUNDERS.fam', ">>", TMP_merged_list])
-            print(command)
+            # print(command)
             os.system(command)
 
 
@@ -546,7 +546,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
             command = ' '.join(
                 [plink, "--bfile", SNP_DATA2 + '.FOUNDERS.QC', "--merge-list", TMP_merged_list, "--make-bed", "--out",
                  OUTPUT + '.MERGED.FOUNDERS'])
-            print(command)
+            # print(command)
             os.system(command)
 
 
@@ -608,13 +608,13 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
             ### (1) Frequency file to use in filtering out some snps ( *.MERGED.FOUNDERS.FRQ )
             command = ' '.join(
                 [plink, "--bfile", OUTPUT + '.MERGED.FOUNDERS', "--freq", "--out", OUTPUT + '.MERGED.FOUNDERS.FRQ'])
-            print(command)
+            # print(command)
             os.system(command)
 
             ### (2) List up SNPs which have extreme allele frequency. ( all.remove.snps )
             command = ' '.join(["awk", "'{if (NR > 1 && ($5 < 0.0001 || $5 > 0.9999)){print $2}}'",
                                 OUTPUT + '.MERGED.FOUNDERS.FRQ.frq', ">", TMP_all_remove_snps])
-            print(command)
+            # print(command)
             os.system(command)
 
             ### (3) Making reference allele ( allele.order )
@@ -622,7 +622,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
             command = ' '.join(
                 ["awk", '\'{if (NR > 1){if (($3 == "a" && $4 == "p") || ($4 == "a" && $3 == "p")){print $2 "\tp"}}}\'',
                  OUTPUT + '.MERGED.FOUNDERS.FRQ.frq', ">", TMP_allele_order])
-            print(command)
+            # print(command)
             os.system(command)
 
 
@@ -631,7 +631,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
             command = ' '.join(
                 [plink, "--bfile", OUTPUT + '.MERGED.FOUNDERS', "--a1-allele", TMP_allele_order, "--exclude",
                  TMP_all_remove_snps, "--geno 0.5", "--make-bed", "--out", OUTPUT])
-            print(command)
+            # print(command)
             os.system(command)
 
 
@@ -639,7 +639,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
             # Calculate allele frequencies
             command = ' '.join([plink, "--bfile", OUTPUT, "--keep-allele-order", "--freq", "--out", OUTPUT + '.FRQ',
                                 "--a1-allele", TMP_allele_order])
-            print(command)
+            # print(command)
             os.system(command)
 
 
@@ -721,7 +721,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
 
                 # command = ' '.join(["awk", '\'{print $2" "$4" "$5" "$6}\'', OUTPUT + '.bim', ">", OUTPUT + '.markers'])
                 command = ' '.join(["awk", '\'{print $2" "$4" "$6" "$5}\'', bim_ATtrick, ">", OUTPUT + '.ATtrick.markers'])
-                print(command)
+                # print(command)
                 os.system(command)
                 """
                 Plink works by setting ALT allele as a1-allele, which is the 5th column of bim file.
@@ -746,15 +746,15 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
                     [plink, "--bed", OUTPUT+'.bed', "--bim", bim_ATtrick, "--fam", OUTPUT+'.fam',
                      "--keep-allele-order", "--recode", "--alleleACGT", "--out", OUTPUT+'.ATtrick',
                      "--a1-allele", a1_allele_ATtrick])
-                print(command)
+                # print(command)
                 os.system(command)
 
                 command = ' '.join(["awk", '\'{print "M " $2}\'', OUTPUT + '.ATtrick.map', ">", OUTPUT + '.ATtrick.dat'])
-                print(command)
+                # print(command)
                 os.system(command)
 
                 command = ' '.join(["cut -d ' ' -f1-5,7-", OUTPUT + '.ATtrick.ped', ">", OUTPUT + '.ATtrick.nopheno.ped'])
-                print(command)
+                # print(command)
                 os.system(command)
 
                 index += 1
@@ -763,7 +763,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
 
                 command = ' '.join([linkage2beagle, "pedigree=" + OUTPUT + '.ATtrick.nopheno.ped', "data=" + OUTPUT + '.ATtrick.dat',
                                     "beagle=" + OUTPUT + '.ATtrick.bgl', "standard=true", ">", OUTPUT + '.ATtrick.bgl.log'])
-                print(command)
+                # print(command)
                 os.system(command)
 
                 index += 1
@@ -772,7 +772,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
                 print("[{}] Converting BEAGLE to VCF format.".format(index))
 
                 command = ' '.join([beagle2vcf, '6', redefined_markers, OUTPUT + '.ATtrick.bgl', '0', '>', OUTPUT+'.bgl.vcf'])
-                print(command)
+                # print(command)
                 os.system(command)
 
                 index += 1
@@ -814,7 +814,7 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
                 command = ' '.join([beagle, "gt={}".format(OUTPUT+'.bgl.vcf'),
                                     "impute=false", "nthreads={}".format(_nthreads),
                                     "niterations=5", "lowmem=true", "out={}".format(OUTPUT+'.bgl.phased')])
-                print(command)
+                # print(command)
 
                 try:
                     # os.system(command)
@@ -893,13 +893,13 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
 
 
             command = ' '.join([plink, "--bfile", __HLA__, "--filter-founders", "--maf 0.0001", "--make-bed", "--out", OUTPUT+'.HLA.FOUNDERS'])
-            print(command)
+            # print(command)
             os.system(command)
             command = ' '.join([plink, "--bfile", __SNPS__, "--filter-founders", "--maf 0.0001", "--make-bed", "--out", OUTPUT+'.SNPS.FOUNDERS'])
-            print(command)
+            # print(command)
             os.system(command)
             command = ' '.join([plink, "--bfile", __AA__, "--filter-founders", "--maf 0.0001", "--make-bed", "--out", OUTPUT+'.AA.FOUNDERS'])
-            print(command)
+            # print(command)
             os.system(command)
 
 
@@ -956,19 +956,19 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
 
 
             command = ' '.join(["echo", __AA__ + '.bed', __AA__ + '.bim', __AA__ + '.fam', ">", TMP_merged_list])
-            print(command)
+            # print(command)
             os.system(command)
 
             command = ' '.join(["echo", __HLA__ + '.bed', __HLA__ + '.bim', __HLA__ + '.fam', ">>", TMP_merged_list])
-            print(command)
+            # print(command)
             os.system(command)
 
             command = ' '.join(["echo", __SNPS__ + '.bed', __SNPS__ + '.bim', __SNPS__ + '.fam', ">>", TMP_merged_list])
-            print(command)
+            # print(command)
             os.system(command)
 
             command = ' '.join([plink, "--merge-list", TMP_merged_list, "--make-bed", "--out", OUTPUT + '.MERGED'])
-            print(command)
+            # print(command)
             os.system(command)
 
 
@@ -1036,13 +1036,13 @@ def MakeReference_v2(_CHPED, _OUT, _hg, _dictionary_AA, _dictionary_SNPS, _varia
             command = ' '.join(
                 ["awk", '\'{if (NR > 1){if (($5 == "a" && $6 == "p") || ($6 == "a" && $5 == "p")){print $2 "\tp"}}}\'',
                  __MERGED__+'.bim', ">", TMP_allele_order])
-            print(command)
+            # print(command)
             os.system(command)
 
             command = ' '.join(
                 [plink, "--make-bed", "--bfile", __MERGED__, "--a1-allele", TMP_allele_order,
                  "--out", OUTPUT]) # (2019. 01. 10.) Final output as just output prefix(`OUTPUT`)
-            print(command)
+            # print(command)
             os.system(command)
 
 
