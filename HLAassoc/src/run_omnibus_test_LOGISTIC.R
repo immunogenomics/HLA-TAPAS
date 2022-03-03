@@ -226,7 +226,7 @@ omnibus_test_haplo <- function(x, pheno, obj_base, covars = NULL, covars_aa = NU
     ao2$PctExp <- ao2[["Sum Sq"]] / sum(ao2[["Sum Sq"]])
   } else {
     ao <- anova(obj_base,obj, test="Chisq")
-    ss <- ao[2, "Deviance"]
+    Deviance <- ao[2, "Deviance"]
     pval <- ao[2, "Pr(>Chi)"]
     ao2$PctExp <- as.numeric(nagelkerke(obj, null = obj_base)$Pseudo.R.squared.for.model.vs.null[3])
   }
@@ -242,7 +242,7 @@ omnibus_test_haplo <- function(x, pheno, obj_base, covars = NULL, covars_aa = NU
     AA_POS = x$AA_POS[1],
     POS = x$POS[1],
     DOF = dof,
-    SS = ss,
+    Deviance = Deviance,
     PVALUE = pval,
     AA = str_c(colnames(phased), collapse = ","),
     N_AA = nrow(x),
@@ -494,7 +494,7 @@ parser$add_argument("--fam", type = "character", nargs = "+")
 parser$add_argument("--bim", type = "character", nargs = "+")
 parser$add_argument("--pheno", type = "character", nargs = "+")
 parser$add_argument("--covars", type = "character", nargs = "+")
-parser$add_argument("--maf-threshold", type = "double", default = 0.005)
+parser$add_argument("--maf-threshold", type = "double", default = 0.00)
 parser$add_argument("--aa-only", action='store_true', help="Run association test only for AA changes")
 parser$add_argument("--n-threads", "-n", type = "integer", default = 8)
 parser$add_argument("--out", type = "character", required = TRUE)

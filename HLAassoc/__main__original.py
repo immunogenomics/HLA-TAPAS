@@ -122,70 +122,8 @@ if __name__ == "__main__":
     subp3.add_argument("--hat", help="\nHLA Allele Table file(*.hat).\n\n")
 
 
-    
-    ### subparser 4 : Linear omnibus Test
-    subp4 = subparsers.add_parser('OMNIBUS_LINEAR',
-                                  help='Omnibus Test',
-                                  add_help=False,
-                                  formatter_class=argparse.RawTextHelpFormatter,
-                                  description=textwrap.dedent('''\
-    #################################################################################################
-        Omnibus Test
-        Author : Masahiro Kanai; Yang Luo
-        E-mail : mkanai@broadinstitute.org ; yangluo@broadinstitute.org
-        Performing Omnibus test on the haplotype-level formed by amino acid positions
-    #################################################################################################
-    '''))
 
-    subp4._optionals.title = "OPTIONS"
-
-    subp4.add_argument("--help", "-h", help="\nShow this help message and exit.\n\n", action='help')
-
-    subp4.add_argument("--vcf", help="\nIMPUTED or PHASED vcf file to perform Omnibus Test. (*.vcf(.gz))\n\n")
-    subp4.add_argument("--file", help="\nThe common file prefix to nominate '--phased(*.bgl.phased)', '--fam(*.fam)', "
-                                      "'--bim(*.bim)', '--pheno(*.pheno)', '--covars(*.covs)' arguments "
-                                      "all at once.\n\n")
-    subp4.add_argument("--pop", help="\nFile name for Population information of samples.\n\n")
-    subp4.add_argument("--phased", help="\nFile name for BEAGLE phased information.\n\n")
-    subp4.add_argument("--fam", help="\nFile name for PLINK fam file. (*.fam)\n\n")
-    subp4.add_argument("--bim", help="\nFile name for PLINK bim file. (*.bim)\n\n")
-    subp4.add_argument("--pheno", help="\nFile name for Phenotype information of samples. (Case:1 / Control:0).\n\n")
-    subp4.add_argument("--covars", help="\nFile name for covariate information (e.g. principal components, age, sex, etc.\n\n")
-    subp4.add_argument("--maf-threshold", help="\nThreshold value for Minor Allele Frequency.\n\n", default=0.0)
-    subp4.add_argument("--aa-only", help="\nRun association test only for AA changes.\n\n", action='store_false')
-    subp4.add_argument("--nthreads", help="\nThe number of threads to be used in the Omnibus Test.\n\n", type=int, default=1)
-    subp4.add_argument("--out", "-o", help="\nOutput file name.\n\n", required=True)
-
-    subp4.add_argument("--remove-samples-by-haplo", action='store_true',
-                       help="\nRemove samples based on haplotypes constructed using a subset of AAs.\n\n")
-    subp4.add_argument("--remove-samples-aa-pattern", type=str, help="\nPrefix of markers to exclude. (ex. AA_B)\n\n")
-    subp4.add_argument("--min-haplo-count", type=int, default=10, help="\nThe minimum number of haplotype count.\n\n")
-
-    subp4.add_argument("--condition", type=str, help="\nFile name for conditioning.\n\n")
-    subp4.add_argument("--condition-gene", type=str, help="\nGene name for conditioning.\n\n")
-    subp4.add_argument("--exclude-composites", action='store_false',
-                       help="\nExclude composite amino acids from omnibus test.\n\n")
-    subp4.add_argument("--output-composites", action='store_true',
-                       help="\nOutput composite amino acids in .haplo.txt.\n\n")
-
-    subp4.add_argument("--exhaustive", action='store_true',
-                       help="\nRun exhaustive testing of AA combinations in a single HLA gene.\n\n")
-    subp4.add_argument("--exhaustive-aa-pos", type=int,
-                       help="\nSpecify a AA pos of the first element(s) of combinations.\n\n")
-    subp4.add_argument("--exhaustive-min-aa", type=int, default=2,
-                       help="\nMinimum number of AA positions to form a combination.\n\n")
-    subp4.add_argument("--exhaustive-max-aa", type=int, default=2,
-                       help="\nMaximum number of AA positions to form a combination.\n\n")
-    subp4.add_argument("--exhaustive-no-filter", action='store_true',
-                       help="\nDon't filter non-increasing AA combinations.\n\n")
-
-
-    subp4.add_argument("--mem", help="\nJava Heap Memory size for vcf2beagle.jar. (ex. 2g, 500m)\n\n", default="2g")
-    subp4.add_argument("--dependency", help="\nSpecify a folder for external software.\n\n", default='dependency/')
-
-
-	
-    ### subparser 2 : Omnibus Test (Logistic model when phenotype is binary (case/control))
+    ### subparser 2 : Omnibus Test
     subp2 = subparsers.add_parser('OMNIBUS_LOGISTIC',
                                   help='Omnibus Test',
                                   add_help=False,
