@@ -43,7 +43,7 @@ class HLAassoc(object):
             _hped=None, _chped=None, _hat=None,
         )
 
-        (2) Omnibus Test (`_MAIN_MENU` == 'OMNIBUS')
+        (3) Omnibus Test (`_MAIN_MENU` == 'OMNIBUS_LINEAR' or `_MAIN_MAIN` == `OMNIBUS_LOGISTIC`)
         __init__(self, _MAIN_MENU, _out, _dependency='./dependency'
             _vcf=None,
             _file=None,
@@ -384,7 +384,7 @@ class HLAassoc(object):
                                           _a1_allele=self.a1_allele)
 
 
-        elif _MAIN_MENU == 'OMNIBUS_LOGISTIC':
+        elif _MAIN_MENU == 'OMNIBUS_LOGISTIC' or _MAIN_MENU == 'OMNIBUS_LINEAR':
 
             ### Argument Parsing
 
@@ -629,16 +629,24 @@ class HLAassoc(object):
 
 
             ##### Omnibus Test #####
-
-            print(std_MAIN_PROCESS_NAME + "Performing Omnibus Test.")
-            self.omnibus_result = self.Omnibus_Test(
-                _out, self.pop, self.bgl_phased, self.fam, self.bim, self.pheno,  self.covars,
-                _maf_threshold, f_aa_only, _nthreads, f_remove_samples_by_haplo, f_remove_samples_aa_pattern,
-                _min_haplo_count,
-                _condition, _condition_gene, f_exclude_composites, f_output_composites, f_exhaustive,
-                _exhaustive_aa_pos, _exhaustive_min_aa, _exhaustive_max_aa, f_exhaustive_no_filter
-            )
-
+            if _MAIN_MENU == "OMNIBUS_LOGISTIC":
+                print(std_MAIN_PROCESS_NAME + "Performing Omnibus Test (LOGISTIC)")
+                self.omnibus_result = self.Omnibus_Test_LOGISTIC(
+                    _out, self.pop, self.bgl_phased, self.fam, self.bim, self.pheno,  self.covars,
+                    _maf_threshold, f_aa_only, _nthreads, f_remove_samples_by_haplo, f_remove_samples_aa_pattern,
+                    _min_haplo_count,
+                    _condition, _condition_gene, f_exclude_composites, f_output_composites, f_exhaustive,
+                    _exhaustive_aa_pos, _exhaustive_min_aa, _exhaustive_max_aa, f_exhaustive_no_filter
+                )
+            else:
+                print(std_MAIN_PROCESS_NAME + "Performing Omnibus Test (LINEAR).")
+                self.omnibus_result = self.Omnibus_Test_LINEAR(
+                           _out, self.pop, self.bgl_phased, self.fam, self.bim, self.pheno,  self.covars,
+                           _maf_threshold, f_aa_only, _nthreads, f_remove_samples_by_haplo, f_remove_samples_aa_pattern,
+                           _min_haplo_count,
+                           _condition, _condition_gene, f_exclude_composites, f_output_composites, f_exhaustive,
+                           _exhaustive_aa_pos, _exhaustive_min_aa, _exhaustive_max_aa, f_exhaustive_no_filter
+                   )
 
 
         else:
@@ -763,7 +771,7 @@ class HLAassoc(object):
 
             return _out+'.assoc.linear'
 
-    def Omnibus_Test(self, _out, _pop, _bgl_phased, _fam, _bim, _pheno, _covars,
+    def Omnibus_Test_LOGISTIC(self, _out, _pop, _bgl_phased, _fam, _bim, _pheno, _covars,
                      _maf_threshold=0,
                      f_aa_only=True,
                      _nthreads=1,
@@ -827,6 +835,69 @@ class HLAassoc(object):
             f_log.close()
             return _out
 
+    def Omnibus_Test_LINEAR(self, _out, _pop, _bgl_phased, _fam, _bim, _pheno, _covars,
+                     _maf_threshold=0,
+                     f_aa_only=True,
+                     _nthreads=1,
+                     f_remove_samples_by_haplo=False,
+                     f_remove_samples_aa_pattern=False,
+                     _min_haplo_count=10,
+                     _condition=None,
+                     _condition_gene=None,
+                     f_exclude_composites=True,
+                     f_output_composites=False,
+                     f_exhaustive=False,
+                     _exhaustive_aa_pos=None,
+                     _exhaustive_min_aa=2,
+                     _exhaustive_max_aa=2,
+                     f_exhaustive_no_filter=False,
+                     _p_script='HLAassoc/src/run_omnibus_test_LINEAR.R'):
+
+
+        necessary = "--out {} --pop {} --phased {} --fam {} --bim {} --pheno {}  --covars {}" \
+                    .format(_out, _pop, _bgl_phased, _fam, _bim, _pheno, _covars)
+
+        default = "--maf-threshold {} --n-threads {} --exhaustive-min-aa {} --exhaustive-max-aa {} --min-haplo-count {}" \
+                    .format(_maf_threshold, _nthreads, _exhaustive_min_aa, _exhaustive_max_aa, _min_haplo_count)
+
+
+        optional = "--exhaustive" if f_exhaustive else "--omnibus"
+
+        if f_aa_only:
+            optional = optional + " --aa-only"
+        if f_remove_samples_by_haplo:
+            optional = optional + " --remove-samples-by-haplo"
+        if f_remove_samples_aa_pattern:
+            optional = optional + " --remove-samples-aa-pattern"
+        if bool(_condition):
+            optional = optional + " --condition {}".format(_condition)
+        if bool(_condition_gene):
+            optional = optional + " --condition-gene {}".format(_condition_gene)
+        if f_exclude_composites:
+            optional = optional + " --exclude-composites"
+        if f_output_composites:
+            optional = optional + " --output-composites"
+        if bool(_exhaustive_aa_pos):
+            optional = optional + " --exhaustive-aa-pos {}".format(_exhaustive_aa_pos)
+        if f_exhaustive_no_filter:
+            optional = optional + " --exhaustive-no-filter"
+
+
+        command = ' '.join([self.Rscript, _p_script, necessary, default, optional])
+
+        try:
+            f_log = open(_out+'.OMlog', 'w')
+            # print(command)
+            subprocess.run(re.split(r'\s+', command), check=True, stdout=f_log, stderr=f_log)
+
+        except subprocess.CalledProcessError:
+            # Fail
+            print(std_ERROR_MAIN_PROCESS_NAME + "Omnibus Test failed. See the log file('{}')." \
+                  .format(_out+'.OMlog'))
+        else:
+            # Succeed
+            f_log.close()
+            return _out
 
 
 

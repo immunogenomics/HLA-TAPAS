@@ -285,6 +285,18 @@ if __name__ == "__main__":
                   _condition=args.condition, _condition_list=args.condition_list,
                   _hped=args.hped, _chped=args.chped, _hat=args.hat)
 
+    if args.Main_Menu == 'OMNIBUS_LINEAR':
+        HLAassoc(args.Main_Menu, args.out, args.dependency,
+                  _vcf=args.vcf, _file=args.file, _pop=args.pop, _phased=args.phased, _fam=args.fam, _bim=args.bim,
+                  _pheno=args.pheno, _covars=args.covars, _maf_threshold=args.maf_threshold,
+                  f_aa_only=args.aa_only, _nthreads=args.nthreads, f_remove_samples_by_haplo=args.remove_samples_by_haplo,
+                  f_remove_samples_aa_pattern=args.remove_samples_aa_pattern, _min_haplo_count=args.min_haplo_count,
+                  _condition=args.condition, _condition_gene=args.condition_gene,
+                  f_exclude_composites=args.exclude_composites,
+                  f_output_composites=args.output_composites, f_exhaustive=args.exhaustive,
+                  _exhaustive_aa_pos=args.exhaustive_aa_pos, _exhaustive_min_aa=args.exhaustive_min_aa,
+                  _exhaustive_max_aa=args.exhaustive_max_aa, f_exhaustive_no_filter=args.exhaustive_no_filter,
+                  _java_heap_mem=args.mem)
     elif args.Main_Menu == 'OMNIBUS_LOGISTIC':
         HLAassoc(args.Main_Menu, args.out, args.dependency,
                   _vcf=args.vcf, _file=args.file, _pop=args.pop, _phased=args.phased, _fam=args.fam, _bim=args.bim,
