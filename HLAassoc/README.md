@@ -125,7 +125,7 @@ $ Rscript run_omnibus_test.R --file cohort --pop pop  \
 ``` -->
 
 ```
-$ python -m HLAassoc OMNIBUS \
+$ python -m HLAassoc OMNIBUS_LINEAR \
     --file HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
     --pop HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
     --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
@@ -136,7 +136,7 @@ $ python -m HLAassoc OMNIBUS \
 The above command is equivalent to the next command.
 
 ```
-$ python -m HLAassoc OMNIBUS \
+$ python -m HLAassoc OMNIBUS_LINEAR \
     --phased HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bgl.phased \
     --fam HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.fam \
     --covars HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pcs \
