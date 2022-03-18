@@ -68,6 +68,8 @@ Assuming you have an imputed vcf file (e.g., from the Michigan imputation server
 1. (Imputed) VCF file generated from SNP2HLA. (*.vcf.gz)
 2. PLINK bim file of reference panel. (*.bim)
 3. PLINK fam file of target samples. (*.fam)
+4. A covariate file e.g. genetic principal components, sex, age, etc. (*.covs; with header: FID, IID, sex, age, PC1, PC2, etc..)
+5. Phenotype file of target samples. (*.pheno;Case: 1/ Control: 0; **no** header. Three columns: FID, IID, Pheno)
 
 PLINK fam file must Phenotype information. All samples will be considered to be originated from the same population.
 
@@ -77,6 +79,8 @@ $ python -m HLAassoc OMNIBUS_LOGISTIC \
     --vcf HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.bgl.phased.vcf.gz \
     --bim HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.REF.bglv4.bim \
     --fam HLAassoc/example/OMNIBUS/Case+Control.300+300.chr6.hg18.fam \
+    --covars HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pcs \
+    --pheno HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pheno \
     --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
@@ -88,7 +92,9 @@ $ python -m HLAassoc OMNIBUS_LINEAR \
     --vcf HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.bgl.phased.vcf.gz \
     --bim HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.REF.bglv4.bim \
     --fam HLAassoc/example/OMNIBUS/Case+Control.300+300.chr6.hg18.fam \
-    --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
+    --covars HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pcs \
+    --pheno HLAassoc/example/OMNIBUS/Continuous+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pheno \
+    --out Myassoc/Continuous+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```
@@ -105,15 +111,8 @@ $ python -m HLAassoc OMNIBUS \
     --maf-threshold 0
 ``` -->
 
-Omnibus Test requires next 5 files, each of which contains necessary information to perform an omnibus test.
+Alternative, if you have phaed BEAGLE file already (*.bgl.phased), you can used the `--phased` tag instead
 
-1. (Imputed) Phased BEAGLE file. (*.bgl.phased)
-2. PLINK bim file of **reference** panel. (*.bim)
-3. PLINK fam file of target samples. (*.fam)
-4. A covariate file e.g. genetic principal components, sex, age, etc. (*.covs; with header: FID, IID, sex, age, PC1, PC2, etc..)
-5. Phenotype file of target samples. (*.pheno;Case: 1/ Control: 0; **no** header. Three columns: FID, IID, Pheno)
-
-Assuming 1 - 5 files have the same file prefix and those specified file extensions, those 5 files can be passed to the Omnibus Test **all at once** with the '--file' argument.
 
 <!-- ```
 # Under construction. (2020.05.11. WS.)
@@ -122,23 +121,23 @@ $ Rscript run_omnibus_test.R --file cohort --pop pop  \
 	--remove-samples-by-haplo \
      	--remove-samples-aa-pattern AA_B \
 	--min-haplo-count 10 --maf-threshold 0 
-``` -->
+``` 
 
 ```
 $ python -m HLAassoc OMNIBUS_LINEAR \
     --file HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100 \
-    --pop HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
+    --covars HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pop \
     --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
     --aa-only \
     --maf-threshold 0
 ```
-
-The above command is equivalent to the next command.
+-->
 
 ```
 $ python -m HLAassoc OMNIBUS_LINEAR \
     --phased HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.bgl.phased \
     --fam HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.fam \
+    --bim HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.bglv4.bim \
     --covars HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pcs \
     --pheno HLAassoc/example/OMNIBUS/Case+Control+1000G_EUR_REF.IMPUTED.chr6.hg18.100+100.pheno \
     --out Myassoc/Case+Control+1000G_EUR_REF.OMNIBUS \
