@@ -11,6 +11,9 @@ std_MAIN_PROCESS_NAME = "\n[%s]: " % (os.path.basename(__file__))
 std_ERROR_MAIN_PROCESS_NAME = "\n[%s::ERROR]: " % (os.path.basename(__file__))
 std_WARNING_MAIN_PROCESS_NAME = "\n[%s::WARNING]: " % (os.path.basename(__file__))
 
+def exec_cmd(_command):
+    subprocess.run(_command, shell=True, check=True)
+
 
 
 def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_dependency="./dependency",
@@ -125,7 +128,7 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
 
 
     JAVATMP = _out+".javatmpdir"
-    os.system("mkdir -p " + JAVATMP)
+    exec_cmd("mkdir -p " + JAVATMP)
 
 
 
@@ -163,7 +166,7 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         #MAF >1% as imputation threshold
         command = ' '.join([PLINK, "--bfile", _target, "--chr 6", "--from-mb 28 --to-mb 34", "--maf 0.01", "--make-bed", "--out", __MHC__])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
     if FLIP:
@@ -173,21 +176,21 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         ### Identifying non-A/T non-C/G SNPs to flip
         command = ' '.join(["echo", "SNP 	POS	A1	A2", ">", OUTPUT+".tmp1"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
         command = ' '.join(["cut", "-f2,4-", __MHC__+".bim", ">>", OUTPUT+".tmp1"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join(["echo", "SNP    POSR    A1R A2R", ">", OUTPUT+".tmp2"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
         command = ' '.join(["cut", "-f2,4-", _reference + ".bim", ">>", OUTPUT + ".tmp2"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join([MERGE, OUTPUT+".tmp2", OUTPUT+".tmp1", "SNP", "|", "grep -v -w NA", ">", OUTPUT+".SNPS.alleles"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
 
@@ -195,31 +198,37 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
 
         command = ' '.join(["awk", "'{if ($3 != $6 && $3 != $7){print $1}}'", OUTPUT+".SNPS.alleles", ">", OUTPUT+".SNPS.toflip1"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
-        command = ' '.join([PLINK, "--bfile", __MHC__, "--flip", OUTPUT+".SNPS.toflip1", "--make-bed", "--out", __MHC__+".FLP"])
+        # Removing duplicate SNP ids
+        command = ' '.join(["cut -f 2", __MHC__+".bim", "| sort | uniq -d >", __MHC__+".dups"])
+        exec_cmd(command)
+        command = ' '.join([PLINK, "--bfile", __MHC__, "--exclude", __MHC__+".dups", "--make-bed --out", __MHC__+".filtered"])
+        exec_cmd(command)
+
+        command = ' '.join([PLINK, "--bfile", __MHC__+".filtered", "--flip", OUTPUT+".SNPS.toflip1", "--make-bed", "--out", __MHC__+".FLP"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         ## Calculating allele freqeuncy
         command = ' '.join([PLINK, "--bfile", __MHC__+".FLP", "--freq", "--out", __MHC__+".FLP.FRQ"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
         command = ' '.join(["sed 's/A1/A1I/g'", __MHC__+".FLP.FRQ.frq", "|", "sed 's/A2/A2I/g'", "|", "sed 's/MAF/MAF_I/g'", ">", OUTPUT+".tmp"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
 
         command = ' '.join(["mv", OUTPUT+".tmp", __MHC__+".FLP.FRQ"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join([MERGE, _reference + ".FRQ.frq", __MHC__ + ".FLP.FRQ.frq", "SNP", "|", "grep -v -w NA", ">", OUTPUT + ".SNPS.frq"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
 
@@ -229,7 +238,7 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
                             'awk \'{if ($3 != $8){print $2 "\t" $3 "\t" $4 "\t" $5 "\t" $9 "\t" $8 "\t" 1-$10 "\t*"}else{print $2 "\t" $3 "\t" $4 "\t" $5 "\t" $8 "\t" $9 "\t" $10 "\t."}}\'',
                             ">", OUTPUT+".SNPS.frq.parsed"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
 
@@ -238,7 +247,7 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         command = ' '.join(['awk \'{if (($2 == "A" && $3 == "T") || ($2 == "T" && $3 == "A") || ($2 == "C" && $3 == "G") || ($2 == "G" && $3 == "C")){if ($4 > $7){diff=$4 - $7; if ($4 > 1-$7){corrected=$4-(1-$7)}else{corrected=(1-$7)-$4}}else{diff=$7-$4;if($7 > (1-$4)){corrected=$7-(1-$4)}else{corrected=(1-$4)-$7}};print $1 "\t" $2 "\t" $3 "\t" $4 "\t" $5 "\t" $6 "\t" $7 "\t" $8 "\t" diff "\t" corrected}}\'',
                             OUTPUT+".SNPS.frq.parsed", ">", OUTPUT+".SNPS.ATCG.frq"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
 
@@ -247,90 +256,94 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         # Identifying A/T and C/G SNPs to flip or remove
         command = ' '.join(["awk '{if ($10 < $9 && $10 < .15){print $1}}'", OUTPUT+".SNPS.ATCG.frq", ">", OUTPUT+".SNPS.toflip2"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join(["awk '{if ($4 > 0.4){print $1}}'", OUTPUT+".SNPS.ATCG.frq", ">", OUTPUT+".SNPS.toremove"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
         ## Identifying non A/T and non C/G SNPs to remove
         command = ' '.join(['awk \'{if (!(($2 == "A" && $3 == "T") || ($2 == "T" && $3 == "A") || ($2 == "C" && $3 == "G") || ($2 == "G" && $3 == "C"))){if ($4 > $7){diff=$4 - $7;}else{diff=$7-$4}; if (diff > \'%f\'){print $1}}}\''%(_tolerated_diff),
                             OUTPUT+".SNPS.frq.parsed", ">>", OUTPUT+".SNPS.toremove"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
         command = ' '.join(['awk \'{if (($2 != "A" && $2 != "C" && $2 != "G" && $2 != "T") || ($3 != "A" && $3 != "C" && $3 != "G" && $3 != "T")){print $1}}\'',
                             OUTPUT+".SNPS.frq.parsed", ">>", OUTPUT+".SNPS.toremove"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join(['awk \'{if (($2 == $5 && $3 != $6) || ($3 == $6 && $2 != $5)){print $1}}\'',
                             OUTPUT+".SNPS.frq.parsed", ">>", OUTPUT+".SNPS.toremove"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
         
         command = ' '.join(["sort", OUTPUT+".SNPS.toremove", "|","uniq > temp" ])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
  
         command = ' '.join(['mv temp',OUTPUT+".SNPS.toremove" ] )
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         ## Making QCd SNP file
-        command = ' '.join([PLINK, "--bfile", __MHC__+".FLP", "--geno 0.2", "--exclude", OUTPUT+".SNPS.toremove", "--flip", OUTPUT+".SNPS.toflip2", "--make-bed", "--out", __MHC__+".QC"])
+        command = ' '.join([PLINK, "--bfile", __MHC__+".FLP", "--geno 0.2", "--exclude", OUTPUT+".SNPS.toremove", "--flip", OUTPUT+".SNPS.toflip2", "--make-bed", "--out", __MHC__+".QC"]) ###
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join([PLINK, "--bfile", __MHC__+".QC", "--freq", "--out", __MHC__+".QC.FRQ"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join(["sed 's/A1/A1I/g'", __MHC__+".QC.FRQ.frq", "|", "sed 's/A2/A2I/g'", "|", "sed 's/MAF/MAF_I/g'", ">", OUTPUT+".tmp"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join(["mv", OUTPUT+".tmp", __MHC__+".QC.FRQ.frq"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join([MERGE, _reference + ".FRQ.frq", __MHC__ + ".QC.FRQ.frq", "SNP", "|", "grep -v -w NA", ">", OUTPUT + ".SNPS.QC.frq"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
         command = ' '.join(["cut -f2", OUTPUT+".SNPS.QC.frq", "|", "awk '{if (NR > 1){print $1}}'", ">", OUTPUT+".SNPS.toinclude"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join(['echo "SNP     POS    A1    A2"', ">", OUTPUT+".tmp1"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
-        command = ' '.join(["cut -f2,4-", __MHC__+".QC.bim", ">>", OUTPUT+".tmp1"])
+        command = ' '.join(["cut -f2,4-", __MHC__+".QC.bim", ">>", OUTPUT+".tmp1"]) ######
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join([MERGE, OUTPUT+".tmp2", OUTPUT+".tmp1", "SNP", "|", 'awk \'{if (NR > 1){if ($5 != "NA"){pos=$5}else{pos=$2}; print "6\t" $1 "\t0\t" pos "\t" $3 "\t" $4}}\'',
                             ">", __MHC__+".QC.bim"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
 
         ## Remove temporary files.
-        os.system(' '.join(["rm ", OUTPUT + ".tmp1"]))
-        os.system(' '.join(["rm ", OUTPUT + ".tmp2"]))
-        os.system(' '.join(["rm ", __MHC__ + ".FLP.*"]))
-        # os.system(' '.join(["rm ", __MHC__+".QC.ped"]))
-        # os.system(' '.join(["rm ", __MHC__+".QC.map"]))
+        exec_cmd(' '.join(["rm ", OUTPUT + ".tmp1"]))
+        exec_cmd(' '.join(["rm ", OUTPUT + ".tmp2"]))
+        exec_cmd(' '.join(["rm ", __MHC__ + ".FLP.*"]))
+        # exec_cmd(' '.join(["rm ", __MHC__+".QC.ped"]))
+        # exec_cmd(' '.join(["rm ", __MHC__+".QC.map"]))
 
-        os.system(' '.join(["rm ", __MHC__ + ".bed"]))
-        os.system(' '.join(["rm ", __MHC__ + ".bim"]))
-        os.system(' '.join(["rm ", __MHC__ + ".fam"]))
-        os.system(' '.join(["rm ", __MHC__ + ".log"]))
+        exec_cmd(' '.join(["rm ", __MHC__ + ".bed"]))
+        exec_cmd(' '.join(["rm ", __MHC__ + ".bim"]))
+        exec_cmd(' '.join(["rm ", __MHC__ + ".fam"]))
+        exec_cmd(' '.join(["rm ", __MHC__ + ".log"]))
+        exec_cmd(' '.join(["rm ", __MHC__ + ".filtered.bed"]))
+        exec_cmd(' '.join(["rm ", __MHC__ + ".filtered.bim"]))
+        exec_cmd(' '.join(["rm ", __MHC__ + ".filtered.fam"]))
+        exec_cmd(' '.join(["rm ", __MHC__ + ".filtered.log"]))
 
 
 
@@ -346,27 +359,27 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         # Extracting SNPs and recoding QC'd file as vcf
         command = ' '.join([PLINK, "--bfile", __MHC__+".QC", "--extract", OUTPUT+".SNPS.toinclude", "--make-bed --out", __MHC__+".QC.reorder" ])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
-        os.system(' '.join(["rm ", OUTPUT + ".SNPS.*"]))
-        os.system(' '.join(["rm ", __MHC__+".QC.bed"]))
-        os.system(' '.join(["rm ", __MHC__+".QC.bim"]))
-        os.system(' '.join(["rm ", __MHC__+".QC.fam"]))
-        os.system(' '.join(["rm ", __MHC__+".QC.log"]))
-        os.system(' '.join(["rm ", __MHC__+".QC.FRQ.frq"]))
-        os.system(' '.join(["rm ", __MHC__+".QC.FRQ.log"]))
+        exec_cmd(' '.join(["rm ", OUTPUT + ".SNPS.*"]))
+        exec_cmd(' '.join(["rm ", __MHC__+".QC.bed"]))
+        exec_cmd(' '.join(["rm ", __MHC__+".QC.bim"]))
+        exec_cmd(' '.join(["rm ", __MHC__+".QC.fam"]))
+        exec_cmd(' '.join(["rm ", __MHC__+".QC.log"]))
+        exec_cmd(' '.join(["rm ", __MHC__+".QC.FRQ.frq"]))
+        exec_cmd(' '.join(["rm ", __MHC__+".QC.FRQ.log"]))
 
 
 
         ## PLINK to Beagle format
         command = ' '.join(["awk", '\'{print $2" "$4" "$6" "$5}\'', __MHC__+".QC.reorder.bim", ">", __MHC__+".QC.markers"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join(["awk", '\'{print $2" "$5}\'', __MHC__+".QC.reorder.bim", ">", __MHC__+".QC.reorder.a1_allele"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         """
         Note that '{print $2" "$4" "$6" "$5}' is used not '{print $2" "$4" "$5" "$6}'
@@ -377,15 +390,15 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
              "--keep-allele-order", "--recode", "--alleleACGT", "--out", __MHC__+".QC.reorder",
              "--a1-allele", __MHC__+".QC.reorder.a1_allele"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join(["awk", '\'{print "M " $2}\'', __MHC__+".QC.reorder.map", ">", __MHC__+".QC.reorder.dat"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
         command = ' '.join(["cut -d ' ' -f1-5,7-", __MHC__+".QC.reorder.ped", ">", __MHC__+".QC.reorder.nopheno.ped"])
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
 
         print("[{}] Converting PLINK to BEAGLE format.".format(index)); index += 1
@@ -396,7 +409,7 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         # print(command)
 
         try:
-            # os.system(command)
+            # exec_cmd(command)
             f_log = open(__MHC__+".QC.bgl.log", 'w')
             subprocess.run(re.split(r'\s+', command), check=True, stdout=f_log, stderr=f_log)
 
@@ -407,8 +420,8 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         else:
             # Succeed
             f_log.close()
-            os.system(' '.join(["rm ", __MHC__+".QC.reorder.*"]))
-            os.system(' '.join(["rm ", __MHC__+".QC.bgl.log"]))
+            exec_cmd(' '.join(["rm ", __MHC__+".QC.reorder.*"]))
+            exec_cmd(' '.join(["rm ", __MHC__+".QC.bgl.log"]))
 
 
 
@@ -417,10 +430,10 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
 
         command = ' '.join([BEAGLE2VCF, '6', __MHC__+".QC.markers", __MHC__+".QC.bgl", '0', '>', __MHC__+".QC.bgl.vcf"]) # => Converted Target file to impute.
         # print(command)
-        os.system(command)
+        exec_cmd(command)
 
-        os.system(' '.join(["rm ", __MHC__+".QC.bgl"]))
-        os.system(' '.join(["rm ", __MHC__+".QC.markers"]))
+        exec_cmd(' '.join(["rm ", __MHC__+".QC.bgl"]))
+        exec_cmd(' '.join(["rm ", __MHC__+".QC.markers"]))
 
 
 
@@ -460,14 +473,14 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         else:
             # Succeed
             f_log.close()
-            os.system(' '.join(["rm ", __MHC__+".QC.bgl.vcf"]))
+            exec_cmd(' '.join(["rm ", __MHC__+".QC.bgl.vcf"]))
 
             __IMPUTED__ = OUTPUT + ".bgl.phased.vcf.gz"
             return __IMPUTED__
         finally:
             # remove redundant log file.
-            os.system("rm {}".format(OUTPUT +".bgl.phased.log"))
-            os.system('rm -rf {}'.format(JAVATMP))
+            exec_cmd("rm {}".format(OUTPUT +".bgl.phased.log"))
+            exec_cmd('rm -rf {}'.format(JAVATMP))
 
         # """
         # (1) Imputation result in *.vcf.gz file
@@ -479,13 +492,13 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         # # (2) Imputation result in *.{bed,bim,fam} files (*.vcf.gz => *.{bed,bim,fam})
         # command = ' '.join([PLINK, "--make-bed", "--vcf", __IMPUTED__, "--a1-allele {} 4 1".format(_reference + ".markers"), "--out", OUTPUT])
         # #print(command)
-        # #os.system(command)
+        # #exec_cmd(command)
         #
         #
         # # (3) Dosage file
         # command = ' '.join(["gunzip -c", __IMPUTED__, "|", "cat", "|", "java -jar {} > {}".format(_vcf2gprobs, OUTPUT+".bgl.gprobs")])
         # #print(command)
-        # #os.system(command)
+        # #exec_cmd(command)
         #
         # __gprobs__ = OUTPUT+".bgl.gprobs"
         #
@@ -493,12 +506,12 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         # command = ' '.join(["tail -n +2 {}".format(__gprobs__), "|",
         #                     PARSEDOSAGE, "- > {}".format(OUTPUT+".dosage")])
         # #print(command)
-        # #os.system(command)
+        # #exec_cmd(command)
         #
         #
         #
-        # os.system(' '.join(["rm ", __MHC__+".QC.vcf.gz"]))
-        # os.system(' '.join(["rm -rf", JAVATMP]))
+        # exec_cmd(' '.join(["rm ", __MHC__+".QC.vcf.gz"]))
+        # exec_cmd(' '.join(["rm -rf", JAVATMP]))
 
     print("Done\n")
 
