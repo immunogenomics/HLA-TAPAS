@@ -200,7 +200,13 @@ def SNP2HLA(_target, _reference, _out, _mem="2g", _tolerated_diff=.15, _p_depend
         # print(command)
         exec_cmd(command)
 
-        command = ' '.join([PLINK, "--bfile", __MHC__, "--flip", OUTPUT+".SNPS.toflip1", "--make-bed", "--out", __MHC__+".FLP"])
+        # Removing duplicate SNP ids
+        command = ' '.join(["cut -f 2", __MHC__+".bim", "| sort | uniq -d >", __MHC__+".dups"])
+        exec_cmd(command)
+        command = ' '.join([PLINK, "--bfile", __MHC__, "--exclude", __MHC__+".dups", "--make-bed --out", __MHC__+".filtered"])
+        exec_cmd(command)
+
+        command = ' '.join([PLINK, "--bfile", __MHC__+".filtered", "--flip", OUTPUT+".SNPS.toflip1", "--make-bed", "--out", __MHC__+".FLP"])
         # print(command)
         exec_cmd(command)
 
